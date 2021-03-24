@@ -1,0 +1,33 @@
+<div class="background-wrap">
+    <div class="background"></div>
+  </div>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <h1 id="litheader">CSE PROFILE - LOGIN</h1>
+    <div class="inset">
+      <p>
+        <input type="text"   formControlName="username" placeholder="Username">
+      </p>
+      <p>
+        <input type="password" formControlName="password"   placeholder="Password">
+      </p>
+      <div style="text-align: center;color: brown;">{{errorText}}</div>
+      <div style="text-align: center;">
+        <div class="checkboxouter">
+          <input type="checkbox" name="rememberme" id="remember" value="1" formControlName="remember">
+          <label class="checkbox"></label>
+        </div>
+        <label for="remember">Remember me</label>
+      </div>
+      <!-- <input class="loginLoginValue" type="hidden" name="service" value="login" /> -->
+    </div>
+    <p class="p-container">
+      <input type="submit" name="Login" id="go" value="Login">
+    </p>
+    <p  class="p-container" style="text-align: center;">
+     <a class="register"  (click)="register()" > Register</a>
+    </p>
+   
+
+     
+    
+  </form>

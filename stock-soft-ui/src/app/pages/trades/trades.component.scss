@@ -1,0 +1,116 @@
+@import '../../@theme/styles/themes';
+
+@include nb-install-component() {
+
+ 
+
+  .show-grid {
+    .row {
+      margin: -0.5rem;
+    }
+
+    div[class^=col-] {
+      padding: 0.5rem;
+      box-sizing: border-box;
+
+      div {
+        text-align: center;
+        background-color: nb-theme(background-basic-color-2);
+        padding: 0.75rem 0.25rem;
+        border-radius: 0.25rem;
+      }
+    }
+  }
+
+  .grid-h {
+    margin-top: 1.5rem;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  button[nbTreeGridRowToggle] {
+    background: transparent;
+    border: none;
+    padding: 0;
+  }
+  .childrowH{
+    background-color: #151a30;
+  }
+
+  .cdk-header-cell{
+    text-align-last: right;
+  }
+  .childrow {
+    text-align-last: right;
+    background-color: #151a30;
+  }
+  .parentrow {
+    text-align-last: right;
+  }
+  .search-label {
+    display: block;
+  }
+  .search-input {
+    margin-bottom: 2rem;
+  }
+
+  .nb-column-name {
+    width: 100%;
+  }
+  .pull-right{
+    float: right;
+  }
+
+  .inputs-inline {
+  display: flex;
+  margin: 0 -0.5rem;
+
+  > * {
+    margin: 0 0.5rem;
+  }
+  margin-bottom: 2rem;
+}
+
+  ::ng-deep .row-toggle-button {
+    color: nb-theme(text-basic-color);
+  }
+
+  :host .numberFormat{ 
+    float: right;
+  } 
+
+  .nb-tree-grid-header-cell,
+  .nb-tree-grid-header-cell button {
+    text-transform: capitalize;
+  }
+
+  @media screen and (min-width: 400px) {
+    .nb-column-name,
+    .nb-column-size {
+      width: 50%;
+    }
+  }
+
+  @media screen and (min-width: 500px) {
+    .nb-column-name,
+    .nb-column-size,
+    .nb-column-kind {
+      width: 33.333%;
+    }
+  }
+
+  @media screen and (min-width: 600px) {
+    .nb-column-name {
+      width: 31%;
+    }
+    .nb-column-size,
+    .nb-column-kind,
+    .nb-column-items {
+      width: 23%;
+    }
+  }
+ 
+}
+ 

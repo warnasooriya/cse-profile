@@ -1,0 +1,102 @@
+
+<div class="background-wrap">
+    <div class="background"></div>
+  </div>
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <h1 id="litheader">CSE PROFILE - REGISTER</h1>
+    <div class="inset">
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label for="name" class="textColor">Name * </label>
+            </div>
+            <div class="col-md-8">
+                <input type="text"  formControlName="name" id="name" placeholder="Name"  [ngClass]="{ 'is-invalid': submitted && f.name.errors }" >
+            </div>
+
+           
+
+        </div>
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label for="address" class="textColor">Address * </label>
+            </div>
+            <div class="col-md-8">
+                <input type="text"  formControlName="address" id="address" placeholder="Address"  [ngClass]="{ 'is-invalid': submitted && f.address.errors }">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label for="emailAddress" class="textColor">Email * </label>
+            </div>
+            <div class="col-md-8">
+                <input type="text"  formControlName="emailAddress" id="emailAddress" placeholder="Email Address" [ngClass]="{ 'is-invalid': submitted && f.emailAddress.errors }">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label for="mobileNo" class="textColor">Contact Number * </label>
+            </div>
+            <div class="col-md-8">
+                <input type="text"  formControlName="mobileNo" id="mobileNo" placeholder="Contact Number" [ngClass]="{ 'is-invalid': submitted && f.mobileNo.errors }">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label for="cdsaccount" class="textColor">CDS Account Number</label>
+            </div>
+            <div class="col-md-8">
+                <input type="text"  formControlName="cdsaccount" id="cdsaccount" placeholder="CDS Account Number">
+            </div>
+        </div>
+       
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label for="name" class="textColor">Username * </label>
+            </div>
+            <div class="col-md-8">
+                <input type="text"  formControlName="username" id="username" placeholder="Username" [ngClass]="{ 'is-invalid': submitted && f.username.errors }">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label for="password" class="textColor">Password * </label>
+            </div>
+            <div class="col-md-8">
+                <input type="password"  formControlName="password" id="password" placeholder="Password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label for="cpass" class="textColor">Confirm Password * </label>
+            </div>
+            <div class="col-md-8">
+                <input type="password"  formControlName="cpass" id="cpass" placeholder="Confirm Password" [ngClass]="{ 'is-invalid': submitted && f.cpass.errors }">
+                <div *ngIf="submitted && f.cpass.errors" >
+                    <div *ngIf="f.cpass.errors.required">Confirm Password is required</div>
+                    <label *ngIf="f.cpass.errors.mustMatch"   class="textColor">Passwords must match</label>
+                </div>
+            </div>
+            
+        </div>
+
+        
+        
+   
+  
+    <div class="form-group row" >
+        
+        <div class="col-md-8" ></div>
+            <div class="col-md-4" >
+                <input type="submit" class="reg"  value="Register">
+            </div>
+          
+
+</div>
+</div>
+
+  </form>

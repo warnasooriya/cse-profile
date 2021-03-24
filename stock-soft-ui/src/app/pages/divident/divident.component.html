@@ -1,0 +1,81 @@
+<nb-card>
+    <nb-card-header>Dividend Receive</nb-card-header>
+    <nb-card-body>
+      <form [formGroup]="divForm" (ngSubmit)="onSubmit()">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="pcompany" class="label">Company</label>
+        <input type="hidden"      formControlName="userId" >
+      <nb-select  fullWidth   id="pcompany" placeholder="Company" formControlName="company">
+        <nb-option *ngFor="let com of companyData"  [value]="com.id" >
+          {{com.code}}
+        </nb-option> 
+
+      </nb-select>
+      </div>
+
+      <div class="form-group">
+        <label for="divDate" class="label">Dividend Received Date</label>
+        <input   nbInput fullWidth  placeholder="Dividend Received"  formControlName="divDate"     [nbDatepicker]="divDate">
+        <nb-datepicker #divDate></nb-datepicker>
+      </div>
+
+      <nb-alert outline="info"> 
+        <div class="form-group row">
+          <nb-checkbox class="col-md-5" formControlName="equityAvailable" (change)="dissableChecker()"  >Equity Received</nb-checkbox>
+          <label for="equity" class="label col-md-2">Equity Qty</label>
+          <input type="number" [readonly]="isDisabledQty" class="col-md-3" nbInput   id="equity" formControlName="equity"   placeholder="Equity Qty">
+        </div>
+        </nb-alert>
+
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="divxdDate" class="label">Dividend XD Date</label>
+          <input   nbInput fullWidth  placeholder="Dividend XD Date"   formControlName="divxdDate"   [nbDatepicker]="divxdDate">
+          <nb-datepicker #divxdDate></nb-datepicker>
+        </div>
+        <div class="form-group">
+          <label for="currentPrice" class="label">Current Price</label>
+          <input   nbInput fullWidth  placeholder="Current Price"  formControlName="currentPrice" >
+        </div>
+
+        <nb-alert outline="success"> 
+          <div class="form-group row">
+              <nb-checkbox class="col-md-5" formControlName="cashAvailable" (change)="dissableChecker()">Cash Received</nb-checkbox>
+              <label for="cashAmount" class="label col-md-2">Cash Amount</label>
+              <input type="number" [readonly]="isDisabledCash"  class="col-md-3" nbInput   id="cashAmount" formControlName="cashAmount" placeholder="Cash Amount">
+            </div>
+          </nb-alert>
+
+      </div>
+  </div>
+
+  
+      <div class="row">
+          <div class="col-md-10">
+            
+          </div>
+          <div class="col-md-2">
+            <button type="submit" nbButton status="danger" class="pull-right">Save</button>
+          </div>
+      </div>
+        </form>
+        <br>
+
+        <nb-card>
+          <nb-card-header>
+            Dividend Details
+          </nb-card-header>
+          <nb-card-body>
+          <div class="row">
+            <div class="col-md-12">
+              <ng2-smart-table [settings]="settings" [source]="source" (deleteConfirm)="onDeleteConfirm($event)">
+              </ng2-smart-table>
+            </div>
+          </div>
+        </nb-card-body>
+      </nb-card>
+    </nb-card-body>
+  </nb-card>

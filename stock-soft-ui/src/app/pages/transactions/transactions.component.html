@@ -1,0 +1,34 @@
+<nb-card>
+    <nb-card-header>Transactions</nb-card-header>
+    <nb-card-body>
+        <form [formGroup]="transForm" (ngSubmit)="searchTrans()">
+        <div class="row">
+            <div class="col-md-7"></div>
+            <div class="col-md-1">
+            <label for="fromDate" class="label  col-form-label">From Date</label>
+            </div>
+            <div class="col-md-2">
+                <input nbInput fullWidth  placeholder="From Date"  id="fromDate"  [nbDatepicker]="fromDate" formControlName="fromDate" dateFormat="dd-MMM-yyyy" >
+                <nb-datepicker #fromDate></nb-datepicker>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" nbButton status="info" style="float: right;">
+                    <nb-icon   icon="search"  ></nb-icon>
+                    Search
+                </button>
+            </div>
+        </div>
+    </form>
+
+        <br>
+
+      <div class="row">
+        <div class="col-md-12">
+          <ng2-smart-table [settings]="settings" [source]="source" >
+          </ng2-smart-table>
+        </div>
+      </div>
+      </nb-card-body>
+      </nb-card>
+
+

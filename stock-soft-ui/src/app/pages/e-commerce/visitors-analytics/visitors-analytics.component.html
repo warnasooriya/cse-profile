@@ -1,0 +1,21 @@
+<nb-card size="medium">
+  <nb-card-header>
+    <h6>Growth Analytics</h6>
+  </nb-card-header>
+  <nb-card-body>
+    <ngx-charts-pie-chart
+    [view]="view"
+    [scheme]="colorScheme"
+    [results]="topGainers"
+    [gradient]="true"
+    [legend]="true"
+    [legendPosition]="legendPosition"
+    [labels]="true"
+    [doughnut]="true"
+    style="fill: white ;color: chocolate;"
+    >
+  </ngx-charts-pie-chart>
+  </nb-card-body>
+
+   
+</nb-card>

@@ -1,0 +1,47 @@
+<nb-card>
+    
+    <nb-card-header>
+        Buying Details 
+    </nb-card-header>
+    <nb-card-body>
+        <form [formGroup]="buyFilterForm" (ngSubmit)="searchBuy()">
+            <div class="row">
+                <div class="col-md-2">
+                    <label for="totalAmount" class="label  col-form-label">Total Amount</label>
+                </div>
+                <div class="col-md-2">
+                        <input nbInput fullWidth    disabled formControlName="totalAmount"  outline="warning" value="{{totalSumData}}" >
+                    </div>
+
+                    <div class="col-md-1">
+                        <label for="fromDate" class="label  col-form-label">From Date</label>
+                    </div>
+                
+                <div class="col-md-2">
+                    <input nbInput fullWidth  placeholder="From Date"  id="fromDate"  [nbDatepicker]="fromDate" formControlName="fromDate" dateFormat="dd-MMM-yyyy" >
+                    <nb-datepicker #fromDate></nb-datepicker>
+                </div>
+                <div class="col-md-1">
+                    <label for="fromDate" class="label  col-form-label">To Date</label>
+                </div>
+                
+                <div class="col-md-2">
+                    <input nbInput fullWidth  placeholder="To Date"  id="toDate"  [nbDatepicker]="toDate"  formControlName="toDate" dateFormat="dd-MMM-yyyy" >
+                    <nb-datepicker #toDate></nb-datepicker>
+                </div>
+                <div class="col-md-2" >
+                    <button type="submit" nbButton status="info" style="float: right;">
+                        <nb-icon   icon="search"  ></nb-icon>
+                        Filter
+                    </button>
+                </div>
+        </div>
+    </form>
+    
+  
+  <br>
+      <ng2-smart-table [settings]="settings" [source]="source" (deleteConfirm)="onDeleteConfirm($event)">
+      </ng2-smart-table>
+    </nb-card-body>
+  </nb-card>
+  
