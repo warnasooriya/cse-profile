@@ -5,5 +5,5 @@
  */
 export const environment = {
   production: true,
-  endPointURL:"https://techarticless.com/api/"
+  endPointURL:"http://techarticless.com/api/"
 };

@@ -10,7 +10,7 @@
 
 export const environment = {
   production: false,
-  endPointURL:"http://localhost:8080/",
-  imageUrl: 'https://cicra.grp.lk/lms/contentImages/',
-  //endPointURL:"https://techarticless.com/api/"
+  //endPointURL:"http://localhost:8080/",
+  //imageUrl: 'https://cicra.grp.lk/lms/contentImages/',
+  endPointURL:"http://techarticless.com:8080/api/"
 };

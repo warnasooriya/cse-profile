@@ -1,4 +1,4 @@
-expackage com.stock.soft.socksoft.repository;
+package com.stock.soft.socksoft.repository;
 
 import com.stock.soft.socksoft.model.Commission;
 import org.springframework.data.repository.CrudRepository;
