@@ -64,6 +64,8 @@ export const routes: Routes = [
   { path: 'landing', loadChildren: () => import('./landing/landing.module').then(m => m.LandingModule) },
   
   { path: 'pages/profile', loadChildren: () => import('./pages/profile/profile.module').then(m => m.ProfileModule) },
+  
+  { path: 'pages/split', loadChildren: () => import('./pages/split/split.module').then(m => m.SplitModule) },
   { path: '**', redirectTo: 'pages' },
 ];
 

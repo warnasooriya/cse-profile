@@ -27,15 +27,21 @@ export const MENU_ITEMS: NbMenuItem[] = [
     home: true,
   },
   {
+    title: 'Deposit',
+    icon: 'keypad-outline',
+    link: '/pages/deposit',
+    home: true,
+  },
+  {
     title: 'Dividend',
     icon: 'layout-outline',
     link: '/pages/divident',
     home: true,
   },
   {
-    title: 'Deposit',
-    icon: 'keypad-outline',
-    link: '/pages/deposit',
+    title: 'Split',
+    icon: 'shuffle-2-outline',
+    link: '/pages/split',
     home: true,
   },
   {

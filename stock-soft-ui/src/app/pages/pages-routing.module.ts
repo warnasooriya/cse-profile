@@ -55,9 +55,9 @@ const routes: Routes = [{
         .then(m => m.ProfitModule),
     },
     {
-      path: 'editors',
-      loadChildren: () => import('./editors/editors.module')
-        .then(m => m.EditorsModule),
+      path: 'split',
+      loadChildren: () => import('./split/split.module')
+        .then(m => m.SplitModule),
     },
     {
       path: 'tables',
