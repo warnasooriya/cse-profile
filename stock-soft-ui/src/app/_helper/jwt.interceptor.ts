@@ -14,29 +14,29 @@ export class JwtInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         var url = request['url'];
         //console.log(url);
-        if(url.includes("oauth/token")==false && url.includes("logout")==false  && url.includes("register")==false && url.includes("landing")==false){
-            var token =  localStorage.getItem('access_token');
-            if(token==null){
-                token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDk4Njc1MTQsInVzZXJfbmFtZSI6InJhdmkiLCJhdXRob3JpdGllcyI6WyJBRE1JTiJdLCJqdGkiOiIwOWQ0NjA1YS1kMDMyLTQ1NTYtODA0MS1iODI1MGE4OWEyMmMiLCJjbGllbnRfaWQiOiJjc2UtY2xpZW50Iiwic2NvcGUiOlsicmVhZCIsIndyaXRlIl19.kGLTyqHE95YmHzY_OJNPwMWkt9q5vydPglBOeGYgGno";
-            } 
-                request = request.clone({
-                    setHeaders: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
+        if (url.includes("oauth/token") == false && url.includes("logout") == false && url.includes("register") == false && url.includes("landing") == false && url.includes("www.cse.lk") == false) {
+            var token = localStorage.getItem('access_token');
+            if (token == null) {
+                token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDk4Njc1MTQsInVzZXJfbmFtZSI6InJhdmkiLCJhdXRob3JpdGllcyI6WyJBRE1JTiJdLCJqdGkiOiIwOWQ0NjA1YS1kMDMyLTQ1NTYtODA0MS1iODI1MGE4OWEyMmMiLCJjbGllbnRfaWQiOiJjc2UtY2xpZW50Iiwic2NvcGUiOlsicmVhZCIsIndyaXRlIl19.kGLTyqHE95YmHzY_OJNPwMWkt9q5vydPglBOeGYgGno";
+            }
+            request = request.clone({
+                setHeaders: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
         }
 
         //return next.handle(request);
-        return next.handle(request).pipe( tap(() => {},
-      (err: any) => {
-      if (err instanceof HttpErrorResponse) {
-        if (err.status !== 401) {
-         return;
-        }else{
-            this.router.navigate(['auth']);
-        }
-       
-      }
-    }));
+        return next.handle(request).pipe(tap(() => { },
+            (err: any) => {
+                if (err instanceof HttpErrorResponse) {
+                    if (err.status !== 401) {
+                        return;
+                    } else {
+                        this.router.navigate(['auth']);
+                    }
+
+                }
+            }));
     }
 }

@@ -3,6 +3,8 @@ package com.stock.soft.socksoft.controller;
 import com.stock.soft.socksoft.Dto.*;
 import com.stock.soft.socksoft.model.Deposit;
 import com.stock.soft.socksoft.model.Dividend;
+import com.stock.soft.socksoft.model.IPORI;
+import com.stock.soft.socksoft.model.Split;
 import com.stock.soft.socksoft.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -75,6 +77,52 @@ public class StockController {
     public PreviousDeposits getPreviousDeposits(@PathVariable(value = "userId") String userId ){
         return stockService.getPreviousDeposits(userId);
     }
+
+
+
+    @RequestMapping(value = "/splitStock" ,method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
+    public TransactionResponse saveStockSplit(@RequestBody final Split split){
+        int m = Calendar.getInstance().getTime().getMinutes();
+        int h = Calendar.getInstance().getTime().getHours();
+        int s = Calendar.getInstance().getTime().getSeconds();
+        split.getSplitDate().setHours(h);
+        split.getSplitDate().setMinutes(m);
+        split.getSplitDate().setSeconds(s);
+        return stockService.saveStockSplit(split);
+    }
+
+    @RequestMapping(value = "/saveIpoRI" ,method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
+    public TransactionResponse saveIpoRI(@RequestBody final IPORI ipori){
+        int m = Calendar.getInstance().getTime().getMinutes();
+        int h = Calendar.getInstance().getTime().getHours();
+        int s = Calendar.getInstance().getTime().getSeconds();
+        ipori.getDate().setHours(h);
+        ipori.getDate().setMinutes(m);
+        ipori.getDate().setSeconds(s);
+        return stockService.saveIpoRI(ipori);
+    }
+
+
+    @RequestMapping(value = "/getAllIpoRIByUser/{userId}" ,method = RequestMethod.GET)
+    public List<IPORIDto> getAllIpoRIByUser(@PathVariable(value = "userId") String userId ){
+        return stockService.getAllIpoRIByUser(userId);
+    }
+
+    @RequestMapping(value = "/deleteIpoRI/{id}/{userId}" ,method = RequestMethod.DELETE)
+    public TransactionResponse deleteIpoRI(@PathVariable(value = "id") String id ,@PathVariable(value = "userId") String userId ){
+        return stockService.deleteIpoRI(id,userId);
+    }
+
+    @RequestMapping(value = "/loadSplitedDataToTable/{userId}" ,method = RequestMethod.GET)
+    public List<SplitDto> getAllISplitsByUser(@PathVariable(value = "userId") String userId ){
+        return stockService.getAllISplitsByUser(userId);
+    }
+
+    @RequestMapping(value = "/deleteSplit/{id}/{userId}" ,method = RequestMethod.DELETE)
+    public TransactionResponse deleteSplit(@PathVariable(value = "id") String id ,@PathVariable(value = "userId") String userId ){
+        return stockService.deleteSplit(id,userId);
+    }
+
 
 
 }

@@ -6,7 +6,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { HttpClientModule,HTTP_INTERCEPTORS  } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CoreModule } from './@core/core.module';
 import { ThemeModule } from './@theme/theme.module';
 import { AppComponent } from './app.component';
@@ -27,6 +27,8 @@ import { JwtInterceptor } from './_helper/jwt.interceptor';
 import { ErrorInterceptor } from './_helper/error.interceptor';
 import { LoginoutComponent } from './loginout/loginout.component';
 import { RegisterComponent } from './register/register.component';
+import { NgSelectModule } from '@ng-select/ng-select';
+
 @NgModule({
   declarations: [AppComponent, LoginComponent, LoginoutComponent, RegisterComponent],
   imports: [
@@ -36,6 +38,7 @@ import { RegisterComponent } from './register/register.component';
     AppRoutingModule,
     ngFormsModule,
     FormsModule,
+    NgSelectModule,
     ReactiveFormsModule,
     NbSidebarModule.forRoot(),
     NbMenuModule.forRoot(),
@@ -52,7 +55,7 @@ import { RegisterComponent } from './register/register.component';
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-],
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {

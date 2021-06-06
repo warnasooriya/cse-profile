@@ -3,6 +3,7 @@ import com.stock.soft.socksoft.model.Commission;
 import com.stock.soft.socksoft.model.Companies;
 import com.stock.soft.socksoft.repository.CommissionRepository;
 import com.stock.soft.socksoft.repository.CompanyRepository;
+import com.stock.soft.socksoft.service.SyncService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,9 @@ public class CompanyController {
 
     @Autowired
     private CommissionRepository commissionRepository;
+
+    @Autowired
+    private SyncService syncService;
 
     @RequestMapping(value = "/create" ,method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
     public Companies createCompany(@RequestBody  final  Companies companies){
@@ -55,6 +59,12 @@ public class CompanyController {
     @RequestMapping(value = "/getCommission" ,method = RequestMethod.GET)
     public List<Commission> getCommission(){
         return (List<Commission>) commissionRepository.findAll();
+    }
+
+    @RequestMapping(value = "/sync" ,method = RequestMethod.GET)
+    public String sync(){
+        syncService.companyDataSync();
+        return "success";
     }
 
 

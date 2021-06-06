@@ -48,4 +48,9 @@ public class DashboardServiceImpl implements DashboardService {
     public List<ProfitDetailsDto> getProfitDetails(FilterDto filterDto) {
         return dashboardDao.getProfitDetails(filterDto);
     }
+
+    @Override
+    public InvesmentDatDto getTotalInvestmentByUser(String userId) {
+        return dashboardDao.getTotalInvestmentByUser(userId);
+    }
 }

@@ -14,7 +14,7 @@ import { DashboardService } from 'app/services/dashboard.service';
 import { DepositService } from 'app/services/deposit.service';
 import { parse } from 'path';
 import { LayoutService } from 'app/@core/utils';
- 
+
 
 interface TreeNode<T> {
   data: T;
@@ -42,15 +42,15 @@ interface FSEntry {
 })
 export class TradesComponent implements OnInit {
   colorScheme = {
-    backgroundColor: ['#ff5252','#6200EA','#CDDC39','#795548','#673AB7','#EC407A', '#9CCC65', '#388E3C', '#FFCA28','#BCAAA4']
+    backgroundColor: ['#ff5252', '#6200EA', '#CDDC39', '#795548', '#673AB7', '#EC407A', '#9CCC65', '#388E3C', '#FFCA28', '#BCAAA4']
   };
-  submittedBuy =false;
-  submittedSell =false;
-  totalEquityHoldings="0.00";
-  totalEarnings="0.00";
-  currentMonthEarnings="0.00"
-  todayEarnings="0.00";
-  totalDeposits="0.00";
+  submittedBuy = false;
+  submittedSell = false;
+  totalEquityHoldings = "0.00";
+  totalEarnings = "0.00";
+  currentMonthEarnings = "0.00"
+  todayEarnings = "0.00";
+  totalDeposits = "0.00";
 
   settings = {
     add: {
@@ -73,13 +73,15 @@ export class TradesComponent implements OnInit {
       delete: true,
     },
     columns: {
-      company: {
+      code: {
         title: 'Company',
         type: 'string',
       },
       date: {
-        title: 'Date',
+        title: 'Purchase Date',
         type: 'string',
+        filter: false
+
       },
       qty: {
         title: 'Qty',
@@ -87,7 +89,7 @@ export class TradesComponent implements OnInit {
         filter: false
       },
       price: {
-        title: ' Price',
+        title: 'Purchase Price',
         type: 'html',
         filter: false,
         valuePrepareFunction: function (value) { return '<div align="right"> ' + Number(value).toFixed(2) + ' </div>' },
@@ -104,11 +106,32 @@ export class TradesComponent implements OnInit {
         filter: false,
         valuePrepareFunction: function (value) { return '<div align="right"> ' + Number(value).toFixed(2) + ' </div>' },
       },
-
+      currentPrice: {
+        title: 'Current Price',
+        type: 'html',
+        filter: false,
+        valuePrepareFunction: function (value) { return '<div align="right"> ' + Number(value).toFixed(2) + ' </div>' },
+      },
       amount: {
         title: 'Amount',
         type: 'html',
         valuePrepareFunction: function (value) { return '<div align="right"> ' + Number(value).toFixed(2) + ' </div>' },
+        filter: false
+      },
+      unrealizeProfit: {
+        title: 'Profit',
+        type: 'html',
+        valuePrepareFunction: function (value) {
+
+          if (value > 0) {
+            return '<div  align="right" color="red" class="cell_success"> ' + Number(value).toFixed(2) + ' </div>';
+          } else {
+            return '<div  align="right" color="red" class="cell_danger"> ' + Number(value).toFixed(2) + ' </div>';
+          }
+
+
+
+        },
         filter: false
       },
     },
@@ -181,18 +204,18 @@ export class TradesComponent implements OnInit {
     private buyService: BuyService,
     private formBuilder: FormBuilder,
     private sellService: SellService,
-    private dashboardService:DashboardService,
-    private depositService:DepositService,
+    private dashboardService: DashboardService,
+    private depositService: DepositService,
     private layoutService: LayoutService
   ) {
     this.min = this.dateService.addDay(this.dateService.today(), -5);
     this.max = this.dateService.addDay(this.dateService.today(), 5);
     this.layoutService.onSafeChangeLayoutSize()
-    .pipe(
-      takeWhile(() => this.alive),
-    )
-    .subscribe(() => this.resizeChart());
-    
+      .pipe(
+        takeWhile(() => this.alive),
+      )
+      .subscribe(() => this.resizeChart());
+
     this.loadDataTable();
 
   }
@@ -217,14 +240,14 @@ export class TradesComponent implements OnInit {
   // end chart
   ngOnInit() {
 
-    
+
     this.sellForm = this.formBuilder.group({
-      company: ['',Validators.required],
-      transDate: ['',Validators.required],
-      price: ['',Validators.required],
-      userId: ['',Validators.required],
-      qty: ['',Validators.required],
-      amount: ['',Validators.required],
+      company: ['', Validators.required],
+      transDate: ['', Validators.required],
+      price: ['', Validators.required],
+      userId: ['', Validators.required],
+      qty: ['', Validators.required],
+      amount: ['', Validators.required],
     });
 
 
@@ -260,49 +283,49 @@ export class TradesComponent implements OnInit {
 
 
 
-      
+
 
   }
 
   ngOnChanges(): void {
-    
-      this.loadDataTable();
-   
+
+    this.loadDataTable();
+
   }
 
   loadDataTable() {
-    var availableStockList=[];
+    var availableStockList = [];
     //var asl=[{"id":"2c9fa2f9764202850176420e86210002","company":"DFCC BANK PLC","code":"DFCC.N0000","date":"2020-08-20","qty":1600.00,"price":62.90000000,"avgPrice":63.60448000000000,"chargers":1127.1680000000,"amount":101767.1680000000,"lotNumbers":"af3042d2-0bfb-42a5-a5c3-f61a17995c84"},{"id":"2c9fa2f9764202850176420ee4020003","company":"INDUSTRIAL ASPHALTS (CEYLON) PLC","code":"ASPH.N0000","date":"2020-09-30","qty":300001.00,"price":0.30000000,"avgPrice":0.30336000000000,"chargers":1008.0033600000,"amount":91008.3033600000,"lotNumbers":"db8535ab-9201-40a4-b930-cfda0a25d249,be56b8aa-51c5-4274-83c4-269cd9e3ecf6,edb4eb64-e2f4-4609-a0a4-5b2227ed5627"},{"id":"2c9fa2f9764202850176420f2f660004","company":"BROWNS INVESTMENTS PLC","code":"BIL.N0000","date":"2021-01-07","qty":25000.00,"price":6.30000000,"avgPrice":6.37056000000000,"chargers":1764.0000000000,"amount":159264.0000000000,"lotNumbers":"f31f690a-41a1-4782-9af4-5fa5c099397c"},{"id":"2c9fa2f97642028501764211693d000a","company":"NATIONAL DEVELOPMENT BANK PLC","code":"NDB.N0000","date":"2020-12-24","qty":3300.00,"price":77.67272727,"avgPrice":78.54266181818182,"chargers":2870.7840000000,"amount":259190.7840000000,"lotNumbers":"d4f79277-0789-469f-9bce-6978aea683ee,9b0a351b-4d8a-4653-aaa6-d89864583aa2"},{"id":"2c9fa2f976ce12820176d141ecc30005","company":"LANKA HOSPITALS CORPARATION PLC","code":"LHCL.N0000","date":"2021-01-06","qty":6402.00,"price":58.60246798,"avgPrice":59.25881562011871,"chargers":4201.9376000000,"amount":379374.9376000000,"lotNumbers":"f4953813-ef14-4108-a557-28806f1fbf12,cd5596d8-ebed-4af2-afe8-dda6b9964dc3,90d7cadd-69b2-4c8d-9281-6825f036a33b"}];
     this.buyService.getAvailableStock().subscribe((asl: any[]) => {
       this.availableStock = asl;
-    
-      asl.forEach(function(company) {
+
+      asl.forEach(function (company) {
         var amount = company['amount'];
-        var availableStockObj = {"name":company['code'] , "value":amount };
+        var availableStockObj = { "name": company['code'], "value": amount };
         availableStockList.push(availableStockObj);
       });
-      
-      this.options={
-      tooltip: {
-        trigger: 'item',
-        formatter: '{a} <br/>{b} : {c} ({d}%)'
-      },
-      calculable: false,
-      series:{
-        name: 'Company',
-        type: 'pie',
-        radius: [10, 130],
-        roseType: 'Company',
-        data:availableStockList,
-        colorScheme:this.colorScheme
+
+      this.options = {
+        tooltip: {
+          trigger: 'item',
+          formatter: '{a} <br/>{b} : {c} ({d}%)'
+        },
+        calculable: false,
+        series: {
+          name: 'Company',
+          type: 'pie',
+          radius: [10, 130],
+          roseType: 'Company',
+          data: availableStockList,
+          colorScheme: this.colorScheme
+        }
       }
-    }
       console.log('equity holding pie chart');
       console.log(this.options);
 
       this.source = new LocalDataSource(this.availableStock);
-      
-     
+
+
     });
 
     //  var sl = [
@@ -312,8 +335,8 @@ export class TradesComponent implements OnInit {
     //    {name: "NDB.N0000", value: 259190.784},
     //    {name: "LHCL.N0000", value: 379374.9376}
     // ];
-     
-    
+
+
     // var series = {
     //   name: 'Company',
     //   type: 'pie',
@@ -326,13 +349,13 @@ export class TradesComponent implements OnInit {
     // console.log(this.options);
   }
 
-  
+
 
 
   onSubmit() {
 
     this.submittedBuy = true;
-    if(this.buyForm.invalid){
+    if (this.buyForm.invalid) {
       return;
     }
     let formData = this.buyForm.value;
@@ -344,7 +367,7 @@ export class TradesComponent implements OnInit {
         Swal.fire('CSE Profile', 'Data Saved Successfully!', 'success');
         this.clearForm();
         this.loadDataTable();
-          
+
         this.getTotalValuesToCards();
         this.loadPreviousDepositTotals();
         this.submittedBuy = false;
@@ -359,11 +382,12 @@ export class TradesComponent implements OnInit {
 
   onSubmitSale() {
     this.submittedSell = true;
-    if(this.sellForm.invalid){
+    if (this.sellForm.invalid) {
       return;
     }
     console.log('data submitting');
     let formData = this.sellForm.value;
+
     this.sellService.saveSell(formData).subscribe((response: any[]) => {
       if (response['status'] == "fail") {
         Swal.fire('CSE Profile', 'Data Saving Problem', 'error');
@@ -371,9 +395,9 @@ export class TradesComponent implements OnInit {
         Swal.fire('CSE Profile', 'Data Saved Successfully!', 'success');
         this.clearSalesForm();
         this.loadDataTable();
-        
-    this.getTotalValuesToCards();
-    this.loadPreviousDepositTotals();
+
+        this.getTotalValuesToCards();
+        this.loadPreviousDepositTotals();
         this.availableLots = [];
         this.submittedSell = false;
       }
@@ -438,10 +462,14 @@ export class TradesComponent implements OnInit {
   selAmountAll: string;
   netSellAmountAll: string;
   profitAmount: string;
+  profitPresentage: string;
+  profitStatus: Boolean;
+  currentPrice: Number;
   calculateSellAmount() {
     let formVal = this.sellForm.value;
     let price = formVal.price;
     let qty = formVal.qty;
+    this.profitAmount = "0.00";
 
     let amount = Number(price) * Number(qty);
     let commissionAmount = (amount / 100) * Number(this.tradeCommision);
@@ -454,7 +482,14 @@ export class TradesComponent implements OnInit {
     this.sellamountCharges = (commissionAmount).toFixed(2);
 
     let profit = Number(amount) - Number(costAmount);
+    let profPres = profit / (costAmount / 100);
+    this.profitPresentage = profPres.toFixed(2);
+    this.profitStatus = false;
+    if (profit > 0) {
+      this.profitStatus = true;
+    }
     this.profitAmount = profit.toFixed(2);
+
     this.sellForm = this.formBuilder.group({
       company: [formVal.company, Validators.required],
       transDate: [formVal.date, Validators.required],
@@ -494,23 +529,23 @@ export class TradesComponent implements OnInit {
 
   }
 
-  getTotalValuesToCards(){
-    this.dashboardService.getTotalEarnings().subscribe((earnings:any)=>{
-      this.totalEquityHoldings= Number(earnings["totalEquityHoldings"]).toFixed(2);
-      this.totalEarnings= Number(earnings["totalEarnings"]).toFixed(2);
-      this.currentMonthEarnings= Number(earnings["currentMonthEarnings"]).toFixed(2);
-      this.todayEarnings= Number(earnings["todayEarnings"]).toFixed(2);
+  getTotalValuesToCards() {
+    this.dashboardService.getTotalEarnings().subscribe((earnings: any) => {
+      this.totalEquityHoldings = Number(earnings["totalEquityHoldings"]).toFixed(2);
+      this.totalEarnings = Number(earnings["totalEarnings"]).toFixed(2);
+      this.currentMonthEarnings = Number(earnings["currentMonthEarnings"]).toFixed(2);
+      this.todayEarnings = Number(earnings["todayEarnings"]).toFixed(2);
     })
   }
 
-  loadPreviousDepositTotals(){
-    this.depositService.getPreviousDeposits().subscribe((data:any)=>{
-      this.totalDeposit= Number(data['totalDeposit']).toFixed(2);
+  loadPreviousDepositTotals() {
+    this.depositService.getPreviousDeposits().subscribe((data: any) => {
+      this.totalDeposit = Number(data['totalDeposit']).toFixed(2);
     })
   }
 
   loadCompanyStock(value: any) {
-    this.availableLots=[];
+    this.availableLots = [];
     let formVal = this.sellForm.value;
     if (value == undefined) {
       value = formVal.company;
@@ -529,6 +564,12 @@ export class TradesComponent implements OnInit {
       this.maxQtySales = sum.qty;
       this.sellFormNetAmount = sum.amount;
 
+      if (this.availableLots.length > 0) {
+        this.currentPrice = this.availableLots[0]['currentPrice'];
+        console.log('Current Price', this.currentPrice);
+      }
+
+
       console.log('maxQtySales', this.maxQtySales);
       console.log('sellFormNetAmount', this.sellFormNetAmount);
       if (formVal.date == undefined) {
@@ -537,7 +578,7 @@ export class TradesComponent implements OnInit {
       this.sellForm = this.formBuilder.group({
         company: [value, Validators.required],
         transDate: [formVal.date, Validators.required],
-        price: [formVal.price, Validators.required],
+        price: [this.currentPrice, Validators.required],
         qty: [sum.qty, Validators.required],
         userId: localStorage.getItem("userId"),
         amount: formVal.amount,
@@ -545,6 +586,7 @@ export class TradesComponent implements OnInit {
         profit: formVal.profit,
       });
       this.sellSource = new LocalDataSource(this.availableLots);
+      this.calculateSellAmount();
     });
   }
 

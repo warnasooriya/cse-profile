@@ -14,8 +14,10 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
 @Transactional
@@ -256,5 +258,255 @@ public class StockDaoImpl implements StockDao {
                 .setParameter(2,userId)
                 .getResultList();
         return  lst.get(0);
+    }
+
+    @Override
+    public TransactionResponse saveStockSplit(Split split) {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        em.getTransaction().begin();
+        TransactionResponse transactionResponse = new TransactionResponse();
+        try {
+            em.persist(split);
+
+            // check stock Lots Availability
+            List<ChildStockDto> stockDtoList =  entityManager.createNativeQuery("call getStocksAvailableByUserByCommanies(?,?)",ChildStockDto.class)
+                    .setParameter(1,split.getUserId())
+                    .setParameter(2,split.getCompany())
+                    .getResultList();
+
+            // stock deductions
+            List<StockLedger> stockLedgerList =  new ArrayList<>();
+            AtomicReference<BigInteger> saveQty = new AtomicReference<>(split.getFutureQty());
+            stockDtoList.forEach(lotsStock -> {
+                    saveQty.set(lotsStock.getQty().toBigInteger());
+                    String lotNumber = lotsStock.getLotNumber();
+                    StockLedger stockLedger = new StockLedger();
+                    stockLedger.setUserId(split.getUserId());
+                    stockLedger.setCommissionRate(new BigDecimal(0));
+                    stockLedger.setCommissionAmount(new BigDecimal(0));
+                    stockLedger.setLotNumber(lotNumber);
+                    stockLedger.setPrice(split.getCurrentPrice());
+                    stockLedger.setOutStock(saveQty.get());
+                    stockLedger.setStockIn(BigInteger.ZERO);
+                    stockLedger.setCompany(split.getCompany());
+                    stockLedger.setTransDate(split.getSplitDate());
+                    stockLedger.setTransType("SPLIT-OUT");
+                    stockLedger.setTotalAmount(new BigDecimal(0));
+                    stockLedger.setNetAmount(new BigDecimal(0));
+                    stockLedger.setOutAmount(new BigDecimal(0));
+                    stockLedger.setInAmount(BigDecimal.ZERO);
+                    stockLedger.setTransId(split.getId());
+                    stockLedgerList.add(stockLedger);
+            });
+
+            // save to stock Ledger
+            stockLedgerList.forEach(stockLedger -> {
+                stockLedger.setTransId(split.getId());
+                em.persist(stockLedger);
+            });
+
+            StockLedger stockLedger = new StockLedger();
+            stockLedger.setUserId(split.getUserId());
+            stockLedger.setStockIn(split.getFutureQty());
+            stockLedger.setOutStock(new BigInteger("0"));
+            stockLedger.setTransDate(split.getSplitDate());
+            stockLedger.setTransType("SPLIT-IN");
+            stockLedger.setTransId(split.getId());
+            stockLedger.setOutAmount(new BigDecimal(0));
+            stockLedger.setInAmount(new BigDecimal(0));
+            stockLedger.setLotNumber(UUID.randomUUID().toString());
+            stockLedger.setCompany(split.getCompany());
+            stockLedger.setPrice(split.getNewPrice());
+            stockLedger.setTotalAmount(new BigDecimal(0));
+            stockLedger.setCommissionRate(new BigDecimal(0));
+            stockLedger.setCommissionAmount(new BigDecimal(0));
+            stockLedger.setNetAmount(new BigDecimal(0));
+            em.persist(stockLedger);
+
+
+            em.getTransaction().commit();
+            transactionResponse.setMessage("Splited Successfully !");
+            transactionResponse.setStatus("success");
+            transactionResponse.setResObj(split);
+
+
+        }catch (Exception ex){
+            logger.warning(ex.getMessage());
+            System.out.println(ex);
+            em.getTransaction().rollback();
+            transactionResponse.setMessage("Split Deleting Problem !");
+            transactionResponse.setStatus("fail");
+            transactionResponse.setResObj(ex);
+        }
+        return transactionResponse;
+    }
+
+    @Override
+    public TransactionResponse saveIpoRI(IPORI ipori) {
+
+        EntityManager em = entityManagerFactory.createEntityManager();
+        em.getTransaction().begin();
+        TransactionResponse transactionResponse = new TransactionResponse();
+
+        try {
+            String transType =ipori.getTransType();
+            em.persist(ipori);
+
+            StockLedger stockLedger = new StockLedger();
+            stockLedger.setUserId(ipori.getUserId());
+            stockLedger.setStockIn(ipori.getQty());
+            stockLedger.setOutStock(new BigInteger("0"));
+            stockLedger.setTransDate(ipori.getDate());
+            stockLedger.setTransType(transType);
+            stockLedger.setTransId(ipori.getId());
+            stockLedger.setOutAmount(new BigDecimal(0));
+            stockLedger.setInAmount(new BigDecimal(0));
+            stockLedger.setLotNumber(UUID.randomUUID().toString());
+            stockLedger.setCompany(ipori.getCompany());
+            stockLedger.setPrice(ipori.getPrice());
+            stockLedger.setTotalAmount(ipori.getAmount());
+            stockLedger.setCommissionRate(new BigDecimal(0));
+            stockLedger.setCommissionAmount(new BigDecimal(0));
+            stockLedger.setNetAmount(ipori.getAmount());
+            em.persist(stockLedger);
+
+            String transTypes = "RIGHT-ISSUE-SUBMIT-DEPOSIT";
+            if(ipori.getTransType().toLowerCase().equals("ipo")){
+                transTypes="IPO-SUBMIT-DEPOSIT";
+            }
+
+            CashBook cashBookIn = new CashBook();
+            cashBookIn.setCompany(ipori.getCompany());
+            cashBookIn.setInAmount(ipori.getAmount());
+            cashBookIn.setOutAmount(new BigDecimal(0));
+            cashBookIn.setUserId(ipori.getUserId());
+            cashBookIn.setTransDate(ipori.getDate());
+            cashBookIn.setTransRefId(ipori.getId());
+            cashBookIn.setTransType(transTypes);
+            em.persist(cashBookIn);
+
+            transTypes = "RIGHT-ISSUE-SUBMIT";
+            if(ipori.getTransType().toLowerCase().equals("ipo")){
+                transTypes="IPO-SUBMIT";
+            }
+
+            CashBook cashBookOut = new CashBook();
+            cashBookOut.setCompany(ipori.getCompany());
+            cashBookOut.setInAmount(new BigDecimal(0));
+            cashBookOut.setOutAmount(ipori.getAmount());
+            cashBookOut.setUserId(ipori.getUserId());
+            cashBookOut.setTransDate(ipori.getDate());
+            cashBookOut.setTransRefId(ipori.getId());
+            cashBookOut.setTransType(transTypes);
+            em.persist(cashBookOut);
+
+            em.getTransaction().commit();
+            transactionResponse.setMessage("Transaction Saved Successfully !");
+            transactionResponse.setStatus("success");
+            transactionResponse.setResObj(ipori);
+
+        }catch (Exception e){
+            em.getTransaction().rollback();
+            transactionResponse.setMessage("Transaction Saving Problem !");
+            transactionResponse.setStatus("fail");
+            transactionResponse.setResObj(e);
+        }
+        return transactionResponse;
+    }
+
+    @Override
+    public List<IPORIDto> getAllIpoRIByUser(String userId) {
+        String sql="SELECT ipori.id,ipori.trans_type , companies.name as company,DATE_FORMAT(ipori.date,\"%Y-%m-%d\") AS date , ipori.qty , ipori.price , ipori.amount ,ipori.user_id FROM ipori inner join companies on ipori.company=companies.id where ipori.user_id=? order by ipori.date desc";
+        List<IPORIDto> iporiDtos = entityManager.createNativeQuery(sql,IPORIDto.class)
+                .setParameter(1,userId)
+                .getResultList();
+        return iporiDtos;
+    }
+
+    @Override
+    public TransactionResponse deleteIpoRI(String id, String userId) {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        em.getTransaction().begin();
+        TransactionResponse transactionResponse = new TransactionResponse();
+        try {
+            String sql="delete from cash_book where user_id=?  and trans_ref_id=? ";
+            em.createNativeQuery(sql)
+                    .setParameter(1,userId)
+                    .setParameter(2,id)
+                    .executeUpdate();
+            IPORI ipori =em.find(IPORI.class,id);
+
+
+            sql="delete from stock_ledger where user_id=? AND  trans_id=? ";
+            em.createNativeQuery(sql)
+                    .setParameter(1,userId)
+                    .setParameter(2,id)
+                    .executeUpdate();
+
+            sql="delete from ipori where user_id=? and  id=? ";
+            em.createNativeQuery(sql)
+                    .setParameter(1,userId)
+                    .setParameter(2,id)
+                    .executeUpdate();
+
+            em.getTransaction().commit();
+            transactionResponse.setMessage("Transaction Deleted Successfully !");
+            transactionResponse.setStatus("success");
+            transactionResponse.setResObj(ipori);
+        }catch (Exception ex){
+            logger.warning(ex.getMessage());
+            System.out.println(ex);
+            em.getTransaction().rollback();
+            transactionResponse.setMessage("Transaction Deleting Problem !");
+            transactionResponse.setStatus("fail");
+            transactionResponse.setResObj(ex);
+        }
+        return transactionResponse;
+    }
+
+
+    @Override
+    public List<SplitDto> getAllISplitsByUser(String userId) {
+        String sql="SELECT s.id, c.name as company,s.current_price, s.current_qty, s.from_qty, s.future_qty, s.new_price, s.out_qty, s.split_date, s.user_id  FROM split s inner join companies c on s.company=c.id where s.user_id=? order by s.split_date desc ; ";
+        List<SplitDto> splitDtos = entityManager.createNativeQuery(sql,SplitDto.class)
+                .setParameter(1,userId)
+                .getResultList();
+        return splitDtos;
+    }
+
+
+    @Override
+    public TransactionResponse deleteSplit(String id, String userId) {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        em.getTransaction().begin();
+        TransactionResponse transactionResponse = new TransactionResponse();
+        try {
+
+            Split split =em.find(Split.class,id);
+            String sql="delete from stock_ledger where user_id=? AND  trans_id=? ";
+            em.createNativeQuery(sql)
+                    .setParameter(1,userId)
+                    .setParameter(2,id)
+                    .executeUpdate();
+
+            sql="delete from split where user_id=? and  id=? ";
+            em.createNativeQuery(sql)
+                    .setParameter(1,userId)
+                    .setParameter(2,id)
+                    .executeUpdate();
+
+            em.getTransaction().commit();
+            transactionResponse.setMessage("Transaction Deleted Successfully !");
+            transactionResponse.setStatus("success");
+            transactionResponse.setResObj(split);
+        }catch (Exception ex){
+            logger.warning(ex.getMessage());
+            System.out.println(ex);
+            em.getTransaction().rollback();
+            transactionResponse.setMessage("Transaction Deleting Problem !");
+            transactionResponse.setStatus("fail");
+            transactionResponse.setResObj(ex);
+        }
+        return transactionResponse;
     }
 }

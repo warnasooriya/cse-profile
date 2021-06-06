@@ -1,0 +1,81 @@
+<nb-card>
+    <nb-card-header>Cash Widthdraw</nb-card-header>
+    <nb-card-body>
+        <div class="row">
+            <div class="col-md-6">
+                <ng2-smart-table [settings]="settings" [source]="source" (deleteConfirm)="onDeleteConfirm($event)">
+                </ng2-smart-table>
+            </div>
+            <div class="col-md-6">
+                <nb-card>
+                    <nb-card-body>
+                        <form [formGroup]="widthdrawForm" (ngSubmit)="onSubmit()">
+
+                            <div class="form-group">
+                                <label for="date" class="label">Date</label>
+                                <input nbInput fullWidth placeholder="Date" id="date" formControlName="date"
+                                    [nbDatepicker]="date">
+                                <nb-datepicker #date></nb-datepicker>
+                            </div>
+                            <input type="hidden" formControlName="userId">
+                            <div class="form-group">
+
+                                <input type="number" fullWidth step="any" nbInput id="amount" formControlName="amount"
+                                    placeholder="Diposited Amount">
+                            </div>
+
+
+                            <button type="submit" nbButton status="danger">Widthdraw</button>
+                        </form>
+
+
+                        <br>
+                        <hr>
+
+                        <div class="row show-grid">
+                            <div class="col-md-6">
+                                <nb-card>
+                                    <nb-card-header>Total Widthdraw</nb-card-header>
+                                    <nb-card-body>
+                                        <nb-alert outline="info">
+                                            {{totalWidthdraw | number:'2.2'}}
+                                        </nb-alert>
+
+                                    </nb-card-body>
+                                </nb-card>
+                            </div>
+                            <div class="col-md-6">
+                                <nb-card>
+                                    <nb-card-header>Current Month Widthdraw</nb-card-header>
+                                    <nb-card-body>
+                                        <nb-alert outline="success">
+                                            {{currentMonthWidthdraw | number:'2.2'}}
+                                        </nb-alert>
+
+                                    </nb-card-body>
+                                </nb-card>
+                            </div>
+
+
+                        </div>
+
+                    </nb-card-body>
+
+
+
+
+
+
+
+                </nb-card>
+
+            </div>
+
+
+        </div>
+
+
+
+
+    </nb-card-body>
+</nb-card>

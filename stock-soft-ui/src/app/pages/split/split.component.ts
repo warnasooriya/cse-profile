@@ -6,6 +6,7 @@ import { CompanyService } from 'app/services/company.service';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NbDateService } from '@nebular/theme';
 import { LocalDataSource } from 'ng2-smart-table';
+import { SplitService } from 'app/services/split.service';
 
 @Component({
   selector: 'ngx-split',
@@ -13,17 +14,30 @@ import { LocalDataSource } from 'ng2-smart-table';
   styleUrls: ['./split.component.scss']
 })
 export class SplitComponent implements OnInit {
-
-  constructor(private companyService:CompanyService,) { }
-  submitted=false;
-  companyData:any;
-  splitForm:FormGroup;
-  ngOnInit(): void {
+  currentQtyVal = 0;
+  futureQtyAmount = 0;
+  constructor(private companyService: CompanyService, private splitService: SplitService, private formBuilder: FormBuilder) { }
+  submitted = false;
+  companyData: any;
+  splitForm: FormGroup;
+  ngOnInit() {
+    this.loadCompanies();
+    this.splitForm = this.formBuilder.group({
+      company: ['', Validators.required],
+      userId: localStorage.getItem('userId'),
+      splitDate: ['', Validators.required],
+      currentQty: 0,
+      futureQty: 0,
+      outQty: 0,
+      fromQty: 0,
+      currentPrice: 0,
+      newPrice: 0
+    });
+    this.loadSplitedDataToTable();
   }
 
-  
+
   settings = {
-    
     add: {
       addButtonContent: '<i class="nb-plus"></i>',
       createButtonContent: '<i class="nb-checkmark"></i>',
@@ -40,41 +54,59 @@ export class SplitComponent implements OnInit {
     },
     actions: {
       add: false,
-      edit:false
-      },
+      edit: false
+    },
     columns: {
       company: {
         title: 'Company',
         type: 'string'
       },
-      divDate: {
-        title: 'Divident Date',
+
+      splitDate: {
+        title: 'Split Date',
         type: 'string',
-        valuePrepareFunction: function (value) { return   value.split('T')[0]   },
+        valuePrepareFunction: function (value) { return value.split('T')[0] },
       },
-      xdate: {
-        title: 'X Date',
-        type: 'string',
-        valuePrepareFunction: function (value) { return   value.split('T')[0]   },
-      },
-      price: {
-        title: 'Current Price',
+      outQty: {
+        title: 'Out Qty',
         type: 'html',
-        filter:false,
+        filter: false,
+        valuePrepareFunction: function (value) { return '<div align="right"> ' + value + ' </div>' },
+      },
+      fromQty: {
+        title: 'From Qty',
+        type: 'html',
+        filter: false,
+        valuePrepareFunction: function (value) { return '<div align="right"> ' + value + ' </div>' },
+      },
+      currentQty: {
+        title: 'Previous Qty',
+        type: 'html',
+        filter: false,
+        valuePrepareFunction: function (value) { return '<div align="right"> ' + value + ' </div>' },
+      },
+
+      currentPrice: {
+        title: 'Previous Price',
+        type: 'html',
+        filter: false,
         valuePrepareFunction: function (value) { return '<div align="right"> ' + Number(value).toFixed(2) + ' </div>' },
       },
-      equity: {
-        title: 'Equity Qty',
-        type: 'number',
-        filter: false,
-      },
-      amount: {
-        title: 'Cash Amount',
+
+      newPrice: {
+        title: 'New Price',
         type: 'html',
         valuePrepareFunction: function (value) { return '<div align="right"> ' + Number(value).toFixed(2) + ' </div>' },
         filter: false,
       },
-     
+
+      futureQty: {
+        title: 'Generated Qty',
+        type: 'html',
+        valuePrepareFunction: function (value) { return '<div align="right"> ' + value + ' </div>' },
+        filter: false,
+      },
+
     },
   };
 
@@ -89,51 +121,126 @@ export class SplitComponent implements OnInit {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
-      // if (result.isConfirmed) {
-      //   this.dividentService.deleteDividend(event.data.id).subscribe((response:any[])=>{
-      //       if(response["status"]=="success"){
-             
-      //         Swal.fire(
-      //           'Deleted!',
-      //           'Your Record has been deleted.',
-      //           'success'
-      //         );
-      //         this.loadDividendToTable();
-      //       }else{
-      //         Swal.fire(
-      //           'Problem!',
-      //           'Your Record Deleting Problem',
-      //           'error'
-      //         )
-      //       }
-      //   })
-        
-      // }
+      if (result.isConfirmed) {
+        this.splitService.deleteSplit(event.data.id).subscribe((response: any[]) => {
+          if (response["status"] == "success") {
+            Swal.fire(
+              'Deleted!',
+              'Your Record has been deleted.',
+              'success'
+            );
+            this.loadSplitedDataToTable();
+          } else {
+            Swal.fire(
+              'Problem!',
+              'Your Record Deleting Problem',
+              'error'
+            )
+          }
+        })
+
+      }
     })
   }
 
 
-  
-  loadCompanies(){
+
+  loadCompanies() {
     this.companyService.getCompanies().subscribe((company: any[]) => {
       this.companyData = company;
     });
 
   }
 
-  onSubmit(){
-    this.submitted=true;
-    // this.dividentService.saveDivident(this.divForm.value).subscribe((response:any[])=>{
-    //   if (response['status'] == "fail") {
-    //       Swal.fire('CSE Profile', 'Data Saving Problem', 'error');
-    //     } else {
-    //       this.loadDividendToTable();
-    //       Swal.fire('CSE Profile', 'Data Saved Successfully!', 'success');
-    //       this.clearForm();
-    //       this.submitted=false;
-    //     }
+  onSubmit() {
+    this.submitted = true;
+    this.splitService.saveSplit(this.splitForm.value).subscribe((response: any[]) => {
+      if (response['status'] == "fail") {
+        Swal.fire('CSE Profile', 'Data Saving Problem', 'error');
+      } else {
+        this.loadSplitedDataToTable();
+        Swal.fire('CSE Profile', 'Data Saved Successfully!', 'success');
+        this.clearForm();
+        this.submitted = false;
+      }
 
-    // })
+    })
   }
+
+  loadCurrentAvailability() {
+    var frmVal = this.splitForm.value;
+    var companyId = frmVal.company;
+    var currentPrice = 0;
+    console.log('selected company ', companyId);
+    this.splitService.loadCurrentAvailability(localStorage.getItem("userId"), companyId).subscribe((response: any[]) => {
+      let currentQty = response.reduce(function (prev, cur) {
+        return prev + cur.qty;
+      }, 0);
+
+      this.splitService.loadCurrentAvgPrice(localStorage.getItem("userId")).subscribe((res: any[]) => {
+        let data = res.filter(stock => stock.id == companyId);
+        if (data.length > 0) {
+          currentPrice = data[0].avgPrice.toFixed(2);
+        }
+        this.splitForm = this.formBuilder.group({
+          company: [frmVal.company, Validators.required],
+          userId: localStorage.getItem('userId'),
+          splitDate: [frmVal.splitDate, Validators.required],
+          currentQty: currentQty,
+          futureQty: frmVal.futureQty,
+          outQty: frmVal.outQty,
+          fromQty: frmVal.fromQty,
+          currentPrice: currentPrice,
+          newPrice: frmVal.newPrice,
+        });
+      });
+
+    })
+  }
+
+  calculateFutureAmount() {
+    var frmVal = this.splitForm.value;
+    let currentQty = frmVal.currentQty;
+    let outputQty = frmVal.outQty;
+    let fromQty = frmVal.fromQty;
+    let presentage = Number(currentQty) / Number(fromQty);
+    let futureQty = presentage * Number(outputQty);
+
+    let currentPrice = frmVal.currentPrice;
+    let spitRatio = Number(outputQty) / Number(fromQty);
+    let newPrice = Number(currentPrice) / spitRatio;
+
+
+    this.splitForm = this.formBuilder.group({
+      company: [frmVal.company, Validators.required],
+      userId: localStorage.getItem('userId'),
+      splitDate: [frmVal.splitDate, Validators.required],
+      currentQty: frmVal.currentQty,
+      futureQty: parseInt(futureQty.toString()),
+      outQty: frmVal.outQty,
+      fromQty: frmVal.fromQty,
+      currentPrice: frmVal.currentPrice,
+      newPrice: newPrice.toFixed(2),
+    });
+  }
+  clearForm() {
+    this.splitForm = this.formBuilder.group({
+      company: '',
+      splitDate: '',
+      currentQty: '',
+      futureQty: '',
+      outQty: 0,
+      fromQty: 0,
+      currentPrice: 0,
+      newPrice: 0
+    });
+  }
+  loadSplitedDataToTable() {
+    this.splitService.loadSplitedDataToTable(localStorage.getItem("userId")).subscribe((response: any[]) => {
+      this.source = new LocalDataSource(response);
+    })
+  }
+
+
 
 }

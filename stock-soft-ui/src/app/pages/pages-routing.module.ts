@@ -60,9 +60,14 @@ const routes: Routes = [{
         .then(m => m.SplitModule),
     },
     {
-      path: 'tables',
-      loadChildren: () => import('./tables/tables.module')
-        .then(m => m.TablesModule),
+      path: 'ipoRightIssues',
+      loadChildren: () => import('./ipo-and-right-issues/ipo-and-right-issues.module')
+        .then(m => m.IpoAndRightIssuesModule),
+    },
+    {
+      path: 'cash-withdraw',
+      loadChildren: () => import('./cash-withdraw/cash-withdraw.module')
+        .then(m => m.CashWithdrawModule),
     },
     {
       path: 'miscellaneous',

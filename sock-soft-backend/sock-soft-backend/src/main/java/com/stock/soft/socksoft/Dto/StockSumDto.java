@@ -18,6 +18,8 @@ public class StockSumDto {
     private BigDecimal chargers;
     private BigDecimal amount;
     private String lotNumbers;
+    private BigDecimal currentPrice;
+    private BigDecimal unrealizeProfit;
 
     public String getId() {
         return id;
@@ -97,5 +99,21 @@ public class StockSumDto {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public BigDecimal getCurrentPrice() {
+        return currentPrice;
+    }
+
+    public void setCurrentPrice(BigDecimal currentPrice) {
+        this.currentPrice = currentPrice;
+    }
+
+    public BigDecimal getUnrealizeProfit() {
+        return unrealizeProfit;
+    }
+
+    public void setUnrealizeProfit(BigDecimal unrealizeProfit) {
+        this.unrealizeProfit = unrealizeProfit;
     }
 }

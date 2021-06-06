@@ -1,37 +1,37 @@
-
- 
 <nb-card>
-    <nb-card-header>
-      Equity Holding
-    </nb-card-header>
-    <nb-card-body>
-      <div class="form-group row">
-         
-        <label for="totalAmount" class="label col-md-2 col-form-label">Total Deposits</label>
-        <div class="col-md-2">
-          <input nbInput fullWidth    disabled   outline="warning" value="{{totalDeposit}}" >
-        </div>
-        <div class="col-md-8">
-          <button type="button" nbButton status="success" style="float: right;"  (click)="openWindowBuy(contentTemplateBuy)" >
-            <nb-icon icon="shopping-cart"></nb-icon>
-            BUY
-          </button>
-        </div>
+  <nb-card-header>
+    Equity Holding
+  </nb-card-header>
+  <nb-card-body>
+    <div class="form-group row">
+
+      <label for="totalAmount" class="label col-md-2 col-form-label">Total Deposits</label>
+      <div class="col-md-2">
+        <input nbInput fullWidth disabled outline="warning" value="{{totalDeposit}}">
       </div>
+      <div class="col-md-8">
+        <button type="button" nbButton status="success" style="float: right;"
+          (click)="openWindowBuy(contentTemplateBuy)">
+          <nb-icon icon="shopping-cart"></nb-icon>
+          BUY
+        </button>
+      </div>
+    </div>
 
-<br>
+    <br>
 
-      
 
- 
-    
-        <ng2-smart-table [settings]="settings" [source]="availableStock" (deleteConfirm)="openWindow(contentTemplate,$event)">
-        </ng2-smart-table>
-      </nb-card-body>
- 
-  </nb-card>
- 
-   
+
+
+
+    <ng2-smart-table [settings]="settings" [source]="availableStock"
+      (deleteConfirm)="openWindow(contentTemplate,$event)">
+    </ng2-smart-table>
+  </nb-card-body>
+
+</nb-card>
+
+
 
 
 <div class="row">
@@ -42,11 +42,9 @@
       </nb-card-header>
       <nb-card-body>
 
-    <div echarts [options]="options" [theme]="macarons" 
-    
-    class="demo-chart"></div>
+        <div echarts [options]="options" [theme]="macarons" class="demo-chart"></div>
 
-  </nb-card-body>
+      </nb-card-body>
     </nb-card>
   </div>
   <div class="col-md-6">
@@ -58,7 +56,7 @@
             <nb-alert outline="danger">
               {{todayEarnings}}
             </nb-alert>
-           
+
           </nb-card-body>
         </nb-card>
       </div>
@@ -69,7 +67,7 @@
             <nb-alert outline="warning">
               {{currentMonthEarnings}}
             </nb-alert>
-           
+
           </nb-card-body>
         </nb-card>
       </div>
@@ -80,9 +78,9 @@
           <nb-card-header>Total Earning</nb-card-header>
           <nb-card-body>
             <nb-alert outline="success">
-             {{totalEarnings}}
+              {{totalEarnings}}
             </nb-alert>
-           
+
           </nb-card-body>
         </nb-card>
       </div>
@@ -93,7 +91,7 @@
             <nb-alert outline="info">
               {{totalEquityHoldings}}
             </nb-alert>
-           
+
           </nb-card-body>
         </nb-card>
       </div>
@@ -102,57 +100,60 @@
 </div>
 
 
- 
+
 <ng-template #contentTemplate let-data>
   <nb-card style="min-width: 700px;">
     <nb-card-body>
-      <form  [formGroup]="sellForm" (ngSubmit)="onSubmitSale()">
+      <form [formGroup]="sellForm" (ngSubmit)="onSubmitSale()">
         <div class="row">
           <div class="col-md-8">
             <div class="form-group">
               <label for="company" class="label">Company</label>
-              <nb-select  fullWidth formControlName="company" #companyD (ngModelChange)="loadCompanyStock(companyD.value)" required >
-                <nb-option *ngFor="let com of companyData"  [value]="com.id" >
+              <nb-select fullWidth formControlName="company" #companyD
+                (ngModelChange)="loadCompanyStock(companyD.value)" required>
+                <nb-option *ngFor="let com of companyData" [value]="com.id">
                   {{com.code}}
-                 </nb-option> 
-             
-             </nb-select>
-             <!-- <span *ngIf="(company.invalied && company.error.required)">
+                </nb-option>
+
+              </nb-select>
+              <!-- <span *ngIf="(company.invalied && company.error.required)">
               Company is Required
              </span>
               -->
             </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="salesDate" class="label">Sales Date</label>
+              <input nbInput fullWidth placeholder="Sales Date" formControlName="transDate" [nbDatepicker]="salesDate">
+              <nb-datepicker #salesDate></nb-datepicker>
             </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="salesDate" class="label">Sales Date</label>
-                <input nbInput fullWidth  placeholder="Sales Date"  formControlName="transDate"  [nbDatepicker]="salesDate">
-                <nb-datepicker #salesDate></nb-datepicker>
-              </div>
-            </div>
+          </div>
         </div>
-        
-        <input type="hidden" nbInput fullWidth   formControlName="userId" >
- 
-        <ng2-smart-table [settings]="settingsSell" [source]="availableLots" >
+
+        <input type="hidden" nbInput fullWidth formControlName="userId">
+
+        <ng2-smart-table [settings]="settingsSell" [source]="availableLots">
         </ng2-smart-table>
 
         <div class="row">
           <div class="col-md-5">
             <div class="form-group">
               <label for="qty" class="label">Sales Qty</label>
-              <input type="number" nbInput fullWidth id="qty" formControlName="qty" min="1" max="{{maxQtySales}}" placeholder="Qty" (input)="calculateSellAmount()">
+              <input type="number" nbInput fullWidth id="qty" formControlName="qty" min="1" max="{{maxQtySales}}"
+                placeholder="Qty" (input)="calculateSellAmount()">
             </div>
           </div>
           <div class="col-md-5">
             <div class="form-group">
               <br>
-              <input type="number" nbInput fullWidth  formControlName="price" (input)="calculateSellAmount()"   placeholder="Price">
+              <input type="number" nbInput fullWidth formControlName="price" (input)="calculateSellAmount()"
+                placeholder="Price">
             </div>
           </div>
           <div class="col-md-2">
             <label for="price" class="label"><span style="width: 30px;"></span></label>
-            <button type="submit" nbButton status="danger"class="button-down"  >SELL</button>
+            <button type="submit" nbButton status="danger" class="button-down">SELL</button>
           </div>
         </div>
 
@@ -160,106 +161,118 @@
           <div class="col-md-5">
             <div class="form-group">
               <label for="charges" class="label">Charges</label>
-              <input type="number" readonly nbInput fullWidth  formControlName="charges" id="charges"   placeholder="Charges">
+              <input type="number" readonly nbInput fullWidth formControlName="charges" id="charges"
+                placeholder="Charges">
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label   class="label">Amount </label>
-              <input type="number" readonly nbInput fullWidth   formControlName="amount"  placeholder="Amount">
+              <label class="label">Amount </label>
+              <input type="number" readonly nbInput fullWidth formControlName="amount" placeholder="Amount">
             </div>
           </div>
-          
+
           <div class="col-md-3">
             <label for="profit" class="label"><span style="width: 30px;"></span>Profit</label>
-            <input type="number" readonly nbInput fullWidth  formControlName="profit" id="profit"   placeholder="Profit">
+            <input type="number" readonly nbInput fullWidth formControlName="profit" id="profit" placeholder="Profit">
           </div>
         </div>
-        
-       
-            <nb-alert  outline="success"> 
-              <div class="row"> 
-                <div class="col-md-3">
-                  <label   class="label"> Amount = {{selAmountAll}}</label>
-                </div>
-              <div class="col-md-3">
-                <label   class="label"> Charges = {{sellamountCharges}} </label>
-              </div>
-              <div class="col-md-3">
-                <label   class="label"> Net Amount = {{netSellAmountAll}} </label>
-              </div>
-              <div class="col-md-3">
-                <label   class="label"> Profit = {{profitAmount}} </label>
-              </div>
+
+
+        <nb-alert outline="success">
+          <div class="row">
+            <div class="col-md-3">
+              <label class="label"> Amount = {{selAmountAll}}</label>
             </div>
-            </nb-alert>
-          
- 
-          
-    
-        
-        
-        
-        
-       
+            <div class="col-md-3">
+              <label class="label"> Charges = {{sellamountCharges}} </label>
+            </div>
+            <div class="col-md-3">
+              <label class="label"> Net Amount = {{netSellAmountAll}} </label>
+            </div>
+            <div class="col-md-3">
+              <label class="label"> Profit = {{profitAmount}} </label>
+            </div>
+            <div class="col-md-3" *ngIf="profitStatus">
+              <label class="label"> Profit % = <span style="font-size: medium;" class="badge badge-pill badge-success">
+                  {{profitPresentage}} %</span>
+              </label>
+            </div>
+            <div class="col-md-3" *ngIf="!profitStatus">
+              <label class="label"> Profit = <span style="font-size: medium;" class="2x badge badge-pill badge-danger">
+                  {{profitPresentage}} % </span>
+              </label>
+            </div>
+          </div>
+        </nb-alert>
+
+
+
+
+
+
+
+
+
       </form>
     </nb-card-body>
   </nb-card>
   <!-- <p>Here is the text provided via config: "{{ data.text }}"</p> -->
 </ng-template>
 
- 
+
 <ng-template #contentTemplateBuy let-data>
   <nb-card style="min-width: 500px;">
     <nb-card-body>
-      <form [formGroup]="buyForm" (ngSubmit)="onSubmit()"> 
+      <form [formGroup]="buyForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
           <label for="pcompany" class="label">Company</label>
-         
-    <nb-select  fullWidth formControlName="company" id="pcompany" >
-       <nb-option *ngFor="let com of companyData"  [value]="com.id" >
-         {{com.code}}
-        </nb-option> 
-    
-    </nb-select>
+
+          <nb-select fullWidth formControlName="company" id="pcompany">
+            <nb-option *ngFor="let com of companyData" [value]="com.id">
+              {{com.code}}
+            </nb-option>
+
+          </nb-select>
 
 
         </div>
         <div class="form-group">
           <label for="purchaseDate" class="label">Buy Date</label>
-          <input   nbInput fullWidth  placeholder="Buying Date"   formControlName="transDate"  [nbDatepicker]="purchaseDate">
+          <input nbInput fullWidth placeholder="Buying Date" formControlName="transDate" [nbDatepicker]="purchaseDate">
           <nb-datepicker #purchaseDate></nb-datepicker>
         </div>
         <div class="form-group">
           <label for="Pqty" class="label">Buy Qty</label>
-          <input type="number"   nbInput fullWidth  formControlName="qty" (keyup)="calculateAmount()"   placeholder="Qty">
+          <input type="number" nbInput fullWidth formControlName="qty" (keyup)="calculateAmount()" placeholder="Qty">
         </div>
-      
+
         <div class="form-group">
           <label for="Pprice" class="label">Buy Price</label>
-          <input type="number"  formControlName="price" step="any"  nbInput fullWidth  (keyup)="calculateAmount()"   placeholder="Price">
+          <input type="number" formControlName="price" step="any" nbInput fullWidth (keyup)="calculateAmount()"
+            placeholder="Price">
         </div>
         <div class="form-group">
           <label for="pAmount" class="label">Amount</label>
-          <input type="number" class="text-right" disabled   nbInput fullWidth formControlName="amount"   placeholder="Amount">
+          <input type="number" class="text-right" disabled nbInput fullWidth formControlName="amount"
+            placeholder="Amount">
         </div>
         <div class="form-group">
           <label for="pCommission" class="label">Commission</label>
-          <input type="number" class="text-right" disabled   nbInput fullWidth formControlName="commission"  placeholder="Commission">
+          <input type="number" class="text-right" disabled nbInput fullWidth formControlName="commission"
+            placeholder="Commission">
         </div>
-        
+
         <div class="form-group">
           <label for="pnetAmount" class="label">Total Amount</label>
-          <input type="number" class="text-right" disabled   nbInput fullWidth  formControlName="netAmount"  placeholder="Total Amount">
+          <input type="number" class="text-right" disabled nbInput fullWidth formControlName="netAmount"
+            placeholder="Total Amount">
         </div>
-        
-        
+
+
         <button type="submit" nbButton status="success" [ngClass]="pull-right">BUY</button>
       </form>
     </nb-card-body>
   </nb-card>
- <!-- <p>Here is the text provided via config: "{{ data.text }}"</p>  -->
-</ng-template> 
-
-
-
+  <!-- <p>Here is the text provided via config: "{{ data.text }}"</p>  -->
+</ng-template>

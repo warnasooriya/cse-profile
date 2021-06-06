@@ -100,4 +100,17 @@ public class DashboardDaoImpl implements DashboardDao {
                 .setParameter(3,filterDto.getToDate())
                 .getResultList();
     }
+
+    @Override
+    public InvesmentDatDto getTotalInvestmentByUser(String userId) {
+        InvesmentDatDto invesmentDatDto = new InvesmentDatDto();
+        String sql="SELECT ifnull(sum(in_amount),0) as investment FROM cash_book where user_id=? and trans_type IN ('DEPOSIT','IPO-SUBMIT-DEPOSIT','RIGHT-ISSUE-SUBMIT-DEPOSIT')";
+        String sqlcm="SELECT ifnull(sum(in_amount),0) as investment FROM cash_book where user_id=? and DATE_FORMAT(trans_date,\"%Y-%m\")  =  DATE_FORMAT(current_date(),\"%Y-%m\") and trans_type IN ('DEPOSIT','IPO-SUBMIT-DEPOSIT','RIGHT-ISSUE-SUBMIT-DEPOSIT')";
+        //String sqlcm="SELECT ifnull(sum(amount),0) FROM deposit where user_id=? and DATE_FORMAT(date,\"%Y-%m\")  =  DATE_FORMAT(current_date(),\"%Y-%m\") ";
+        String totalDepositAmount =entityManager.createNativeQuery(sql).setParameter(1,userId).getSingleResult().toString();
+        String currentMonthDepositAmount =entityManager.createNativeQuery(sqlcm).setParameter(1,userId).getSingleResult().toString();
+        invesmentDatDto.setTotalInvesment(new BigDecimal(totalDepositAmount));
+        invesmentDatDto.setCurrentMonthInvestment(new BigDecimal(currentMonthDepositAmount));
+        return invesmentDatDto;
+    }
 }

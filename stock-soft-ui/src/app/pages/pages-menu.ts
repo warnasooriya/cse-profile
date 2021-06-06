@@ -13,7 +13,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/pages/trade',
     home: true,
   },
-  
+
   {
     title: 'Buy Details',
     icon: 'shopping-cart',
@@ -45,6 +45,18 @@ export const MENU_ITEMS: NbMenuItem[] = [
     home: true,
   },
   {
+    title: 'IPO | Right Issues',
+    icon: 'plus-square-outline',
+    link: '/pages/ipoRightIssues',
+    home: true,
+  },
+  {
+    title: 'Cash Widthdraw',
+    icon: 'plus-square-outline',
+    link: '/pages/cash-withdraw',
+    home: true,
+  },
+  {
     title: 'Transactions',
     icon: 'options-outline',
     link: '/pages/transactions',
@@ -56,5 +68,5 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/pages/profit',
     home: true,
   },
-  
+
 ];

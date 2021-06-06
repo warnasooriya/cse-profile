@@ -19,4 +19,6 @@ public interface DashboardDao {
     BigDecimal getCashInHandByUser(String userId);
 
     List<ProfitDetailsDto> getProfitDetails(FilterDto filterDto);
+
+    InvesmentDatDto getTotalInvestmentByUser(String userId);
 }

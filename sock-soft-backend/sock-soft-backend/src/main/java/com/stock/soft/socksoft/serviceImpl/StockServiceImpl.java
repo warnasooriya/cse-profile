@@ -4,6 +4,8 @@ import com.stock.soft.socksoft.Dto.*;
 import com.stock.soft.socksoft.dao.StockDao;
 import com.stock.soft.socksoft.model.Deposit;
 import com.stock.soft.socksoft.model.Dividend;
+import com.stock.soft.socksoft.model.IPORI;
+import com.stock.soft.socksoft.model.Split;
 import com.stock.soft.socksoft.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,5 +60,35 @@ public class StockServiceImpl implements StockService {
     @Override
     public PreviousDeposits getPreviousDeposits(String userId) {
         return stockDao.getPreviousDeposits(userId);
+    }
+
+    @Override
+    public TransactionResponse saveStockSplit(Split split) {
+        return stockDao.saveStockSplit(split);
+    }
+
+    @Override
+    public TransactionResponse saveIpoRI(IPORI ipori) {
+        return stockDao.saveIpoRI(ipori);
+    }
+
+    @Override
+    public List<IPORIDto> getAllIpoRIByUser(String userId) {
+        return stockDao.getAllIpoRIByUser(userId);
+    }
+
+    @Override
+    public TransactionResponse deleteIpoRI(String id, String userId) {
+        return stockDao.deleteIpoRI(id,userId);
+    }
+
+    @Override
+    public List<SplitDto> getAllISplitsByUser(String userId) {
+        return stockDao.getAllISplitsByUser(userId);
+    }
+
+    @Override
+    public TransactionResponse deleteSplit(String id, String userId) {
+        return stockDao.deleteSplit(id,userId);
     }
 }

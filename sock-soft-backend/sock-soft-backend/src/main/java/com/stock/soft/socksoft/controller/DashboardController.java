@@ -44,7 +44,7 @@ public class DashboardController {
     @RequestMapping(value = "/getAccountSummary/{userId}" ,method = RequestMethod.GET)
     public AccountSummaryDto getAccountSummary(@PathVariable(value = "userId") String userId  ){
         AccountSummaryDto accountSummaryDto = new AccountSummaryDto();
-        InvesmentDatDto invesmentDatDto = getAllDepositAmountByUser(userId);
+        InvesmentDatDto invesmentDatDto = dashboardService.getTotalInvestmentByUser(userId);
         accountSummaryDto.setTotalInvesment(invesmentDatDto.getTotalInvesment());
         TotalEarningDto totalEarningDto= dashboardService.getTotalEarnings(userId);
         accountSummaryDto.setTotalProfit(totalEarningDto.getTotalEarnings());

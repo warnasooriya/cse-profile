@@ -16,6 +16,7 @@ public class ChildStockDto {
     private BigDecimal amount;
     private String date;
     private String lotNumber;
+    private BigDecimal currentPrice;
 
     public String getId() {
         return id;
@@ -87,5 +88,13 @@ public class ChildStockDto {
 
     public void setLotNumber(String lotNumber) {
         this.lotNumber = lotNumber;
+    }
+
+    public BigDecimal getCurrentPrice() {
+        return currentPrice;
+    }
+
+    public void setCurrentPrice(BigDecimal currentPrice) {
+        this.currentPrice = currentPrice;
     }
 }
