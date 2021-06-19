@@ -1,10 +1,7 @@
 package com.stock.soft.socksoft.dao;
 
 import com.stock.soft.socksoft.Dto.*;
-import com.stock.soft.socksoft.model.Deposit;
-import com.stock.soft.socksoft.model.Dividend;
-import com.stock.soft.socksoft.model.IPORI;
-import com.stock.soft.socksoft.model.Split;
+import com.stock.soft.socksoft.model.*;
 
 import java.util.List;
 
@@ -38,4 +35,12 @@ public interface StockDao {
     List<SplitDto> getAllISplitsByUser(String userId);
 
     TransactionResponse deleteSplit(String id, String userId);
+
+    TransactionResponse saveWidthdrw(Widthdrw widthdrw);
+
+    List<DepositDto> getAllWidthdrwByUser(String userId);
+
+    TransactionResponse deleteWidthdrw(String id, String userId);
+
+    PreviousWidthdrws getPreviousWidthdrws(String userId);
 }

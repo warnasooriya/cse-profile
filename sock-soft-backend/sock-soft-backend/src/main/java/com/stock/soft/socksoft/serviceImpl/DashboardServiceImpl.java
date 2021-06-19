@@ -20,7 +20,7 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     @Override
-    public TotalEarningDto getTotalEarnings(String userId) {
+    public TotalEarningResDto getTotalEarnings(String userId) {
         return dashboardDao.getTotalEarnings(userId);
     }
 

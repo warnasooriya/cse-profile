@@ -10,14 +10,13 @@ import org.springframework.stereotype.Component;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Component
+
 public class Scheduler {
     Logger logger = LoggerFactory.getLogger(Scheduler.class);
 
    @Autowired
    private SyncService syncService;
 
-    @Scheduled(fixedRate = 120000)
     public void companyDataSync() {
         syncService.companyDataSync();
     }

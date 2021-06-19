@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { IpoAndRightIssuesRoutingModule } from './ipo-and-right-issues-routing.module';
 import { IpoAndRightIssuesComponent } from './ipo-and-right-issues.component';
 import { ThemeModule } from 'app/@theme/theme.module';
+
 import {
   NbInputModule,
   NbCardModule,

@@ -47,6 +47,107 @@ public class Companies implements Serializable {
     private BigDecimal percentageChange;
     @Column( nullable = true)
     private BigDecimal changeValue;
+    @Column( nullable = true)
+    private BigDecimal high;
+    @Column( nullable = true)
+    private BigDecimal closingPrice;
+    @Column( nullable = true)
+    private BigDecimal crossingTradeVol;
+    @Column( nullable = true)
+    private BigDecimal crossingVolume;
+    @Column( nullable = true)
+    private BigDecimal low;
+    @Column( nullable = true)
+    private BigDecimal marketCap;
+    @Column( nullable = true)
+    private BigDecimal marketCapPercentage;
+    @Column( nullable = true)
+    private BigDecimal open;
+    @Column( nullable = true)
+    private BigDecimal previousClose;
+    @Column( nullable = true)
+    private BigDecimal status;
+
+    public BigDecimal getHigh() {
+        return high;
+    }
+
+    public void setHigh(BigDecimal high) {
+        this.high = high;
+    }
+
+
+    public BigDecimal getClosingPrice() {
+        return closingPrice;
+    }
+
+    public void setClosingPrice(BigDecimal closingPrice) {
+        this.closingPrice = closingPrice;
+    }
+
+    public BigDecimal getCrossingTradeVol() {
+        return crossingTradeVol;
+    }
+
+    public void setCrossingTradeVol(BigDecimal crossingTradeVol) {
+        this.crossingTradeVol = crossingTradeVol;
+    }
+
+    public BigDecimal getCrossingVolume() {
+        return crossingVolume;
+    }
+
+    public void setCrossingVolume(BigDecimal crossingVolume) {
+        this.crossingVolume = crossingVolume;
+    }
+
+    public BigDecimal getLow() {
+        return low;
+    }
+
+    public void setLow(BigDecimal low) {
+        this.low = low;
+    }
+
+    public BigDecimal getMarketCap() {
+        return marketCap;
+    }
+
+    public void setMarketCap(BigDecimal marketCap) {
+        this.marketCap = marketCap;
+    }
+
+    public BigDecimal getMarketCapPercentage() {
+        return marketCapPercentage;
+    }
+
+    public void setMarketCapPercentage(BigDecimal marketCapPercentage) {
+        this.marketCapPercentage = marketCapPercentage;
+    }
+
+    public BigDecimal getOpen() {
+        return open;
+    }
+
+    public void setOpen(BigDecimal open) {
+        this.open = open;
+    }
+
+    public BigDecimal getPreviousClose() {
+        return previousClose;
+    }
+
+    public void setPreviousClose(BigDecimal previousClose) {
+        this.previousClose = previousClose;
+    }
+
+    public BigDecimal getStatus() {
+        return status;
+    }
+
+    public void setStatus(BigDecimal status) {
+        this.status = status;
+    }
 
     public String getId() {
         return id;

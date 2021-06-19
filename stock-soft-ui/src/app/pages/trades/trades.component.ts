@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, ViewChild, OnInit } from '@angular/core';
-
+import { DatePipe } from '@angular/common';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder, NbWindowService, NbDateService } from '@nebular/theme';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { map, startWith, takeWhile } from 'rxjs/operators';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CompanyService } from 'app/services/company.service';
@@ -14,7 +14,9 @@ import { DashboardService } from 'app/services/dashboard.service';
 import { DepositService } from 'app/services/deposit.service';
 import { parse } from 'path';
 import { LayoutService } from 'app/@core/utils';
-
+import { Stomp } from '@stomp/stompjs';
+import * as SockJS from 'sockjs-client';
+import { environment } from 'environments/environment';
 
 interface TreeNode<T> {
   data: T;
@@ -44,6 +46,7 @@ export class TradesComponent implements OnInit {
   colorScheme = {
     backgroundColor: ['#ff5252', '#6200EA', '#CDDC39', '#795548', '#673AB7', '#EC407A', '#9CCC65', '#388E3C', '#FFCA28', '#BCAAA4']
   };
+  totalDepositWords = "";
   submittedBuy = false;
   submittedSell = false;
   totalEquityHoldings = "0.00";
@@ -68,6 +71,7 @@ export class TradesComponent implements OnInit {
       confirmDelete: true,
     },
     actions: {
+      columnTitle: ':::',
       add: false,
       edit: false,
       delete: true,
@@ -128,13 +132,27 @@ export class TradesComponent implements OnInit {
           } else {
             return '<div  align="right" color="red" class="cell_danger"> ' + Number(value).toFixed(2) + ' </div>';
           }
-
-
-
         },
         filter: false
       },
+
+      percentage: {
+        title: 'Profit %',
+        type: 'html',
+        valuePrepareFunction: function (value) {
+
+          if (value > 0) {
+            return '<div  align="right" color="red" class="cell_success"> ' + Number(value).toFixed(2) + ' % </div>';
+          } else {
+            return '<div  align="right" color="red" class="cell_danger"> ' + Number(value).toFixed(2) + ' %  </div>';
+          }
+        },
+        filter: false
+      },
+
+
     },
+
   };
 
 
@@ -196,7 +214,8 @@ export class TradesComponent implements OnInit {
   source: LocalDataSource;
   sellSource: LocalDataSource;
 
-
+  myDate = new Date();
+  cDate = "";
   constructor(
     private windowService: NbWindowService,
     protected dateService: NbDateService<Date>,
@@ -206,8 +225,12 @@ export class TradesComponent implements OnInit {
     private sellService: SellService,
     private dashboardService: DashboardService,
     private depositService: DepositService,
-    private layoutService: LayoutService
+    private layoutService: LayoutService,
+    private datePipe: DatePipe
   ) {
+
+    let dateString = this.datePipe.transform(this.myDate, 'yyyy-MM-dd');
+    console.log('formatted Date', this.cDate);
     this.min = this.dateService.addDay(this.dateService.today(), -5);
     this.max = this.dateService.addDay(this.dateService.today(), 5);
     this.layoutService.onSafeChangeLayoutSize()
@@ -218,6 +241,49 @@ export class TradesComponent implements OnInit {
 
     this.loadDataTable();
 
+
+    const ws = new SockJS(environment.socketUrl);
+    this.stompClient = Stomp.over(ws);
+    this.stompClient.connect({}, () => {
+      this.stompClient.subscribe('/topic/trade', (message) => {
+        if (message.body) {
+          let newDataSet = [];
+          let tradeObj = JSON.parse(message.body);
+          this.availableStock.forEach(function (com, inx) {
+            let comCode = com.code;
+            let foundCom = tradeObj.find(element => element.code == comCode);
+
+            if (foundCom != undefined && foundCom != null && foundCom != "") {
+
+              com.currentPrice = foundCom.price;
+              let qty = Number(com.qty);
+              let pdate = com.date;
+              let commission = Number(com.commission);
+              let commAmount = 0;
+              let amountVal = qty * com.currentPrice;
+              let costAmount = com.amount;
+
+              if (dateString != pdate) {
+                commAmount = (amountVal / 100) * commission;
+              }
+              let cValuation = Number(amountVal) - Number(commAmount);
+              let profit = Number(cValuation) - Number(costAmount);
+              let presentage = Number(profit) / (Number(costAmount) / 100);
+              com.percentage = presentage;
+              com.unrealizeProfit = profit;
+            }
+            newDataSet.push(com);
+          });
+
+          this.availableStock = newDataSet;
+          //console.table(this.availableStock);
+        }
+      });
+    });
+    // setInterval(() => {
+    //   this.loadDataTable();
+    // }, 60000);
+
   }
   buyForm: FormGroup;
   sellForm: FormGroup;
@@ -227,6 +293,7 @@ export class TradesComponent implements OnInit {
   companyData: any;
   availableStock: any;
   availableLots: any;
+
 
   filteredControlOptions$: Observable<any[]>;
   filteredNgModelOptions$: Observable<any[]>;
@@ -295,7 +362,6 @@ export class TradesComponent implements OnInit {
 
   loadDataTable() {
     var availableStockList = [];
-    //var asl=[{"id":"2c9fa2f9764202850176420e86210002","company":"DFCC BANK PLC","code":"DFCC.N0000","date":"2020-08-20","qty":1600.00,"price":62.90000000,"avgPrice":63.60448000000000,"chargers":1127.1680000000,"amount":101767.1680000000,"lotNumbers":"af3042d2-0bfb-42a5-a5c3-f61a17995c84"},{"id":"2c9fa2f9764202850176420ee4020003","company":"INDUSTRIAL ASPHALTS (CEYLON) PLC","code":"ASPH.N0000","date":"2020-09-30","qty":300001.00,"price":0.30000000,"avgPrice":0.30336000000000,"chargers":1008.0033600000,"amount":91008.3033600000,"lotNumbers":"db8535ab-9201-40a4-b930-cfda0a25d249,be56b8aa-51c5-4274-83c4-269cd9e3ecf6,edb4eb64-e2f4-4609-a0a4-5b2227ed5627"},{"id":"2c9fa2f9764202850176420f2f660004","company":"BROWNS INVESTMENTS PLC","code":"BIL.N0000","date":"2021-01-07","qty":25000.00,"price":6.30000000,"avgPrice":6.37056000000000,"chargers":1764.0000000000,"amount":159264.0000000000,"lotNumbers":"f31f690a-41a1-4782-9af4-5fa5c099397c"},{"id":"2c9fa2f97642028501764211693d000a","company":"NATIONAL DEVELOPMENT BANK PLC","code":"NDB.N0000","date":"2020-12-24","qty":3300.00,"price":77.67272727,"avgPrice":78.54266181818182,"chargers":2870.7840000000,"amount":259190.7840000000,"lotNumbers":"d4f79277-0789-469f-9bce-6978aea683ee,9b0a351b-4d8a-4653-aaa6-d89864583aa2"},{"id":"2c9fa2f976ce12820176d141ecc30005","company":"LANKA HOSPITALS CORPARATION PLC","code":"LHCL.N0000","date":"2021-01-06","qty":6402.00,"price":58.60246798,"avgPrice":59.25881562011871,"chargers":4201.9376000000,"amount":379374.9376000000,"lotNumbers":"f4953813-ef14-4108-a557-28806f1fbf12,cd5596d8-ebed-4af2-afe8-dda6b9964dc3,90d7cadd-69b2-4c8d-9281-6825f036a33b"}];
     this.buyService.getAvailableStock().subscribe((asl: any[]) => {
       this.availableStock = asl;
 
@@ -322,40 +388,19 @@ export class TradesComponent implements OnInit {
       }
       console.log('equity holding pie chart');
       console.log(this.options);
-
       this.source = new LocalDataSource(this.availableStock);
-
-
     });
 
-    //  var sl = [
-    //    {name: "DFCC.N0000", value: 101767.168},
-    //    {name: "ASPH.N0000", value: 91008.30336},
-    //    {name: "BIL.N0000", value: 159264},
-    //    {name: "NDB.N0000", value: 259190.784},
-    //    {name: "LHCL.N0000", value: 379374.9376}
-    // ];
-
-
-    // var series = {
-    //   name: 'Company',
-    //   type: 'pie',
-    //   radius: [10, 130],
-    //   roseType: 'Company',
-    //   data:sl,
-    //   colorScheme:this.colorScheme
-    // }
-    // this.options.series.push(series);
-    // console.log(this.options);
   }
 
 
 
-
+  get f() { return this.buyForm.controls; }
   onSubmit() {
 
     this.submittedBuy = true;
     if (this.buyForm.invalid) {
+      console.log(this.f);
       return;
     }
     let formData = this.buyForm.value;
@@ -379,7 +424,7 @@ export class TradesComponent implements OnInit {
     })
   }
 
-
+  get s() { return this.sellForm.controls; }
   onSubmitSale() {
     this.submittedSell = true;
     if (this.sellForm.invalid) {
@@ -482,7 +527,8 @@ export class TradesComponent implements OnInit {
     this.sellamountCharges = (commissionAmount).toFixed(2);
 
     let profit = Number(amount) - Number(costAmount);
-    let profPres = profit / (costAmount / 100);
+    let profPres = profit / (this.sellFormNetAmount / 100);
+
     this.profitPresentage = profPres.toFixed(2);
     this.profitStatus = false;
     if (profit > 0) {
@@ -493,8 +539,8 @@ export class TradesComponent implements OnInit {
     this.sellForm = this.formBuilder.group({
       company: [formVal.company, Validators.required],
       transDate: [formVal.date, Validators.required],
-      price: [formVal.price, Validators.required],
-      qty: [formVal.qty, Validators.required],
+      price: [formVal.price, Validators.min(0.1)],
+      qty: [formVal.qty, Validators.min(1)],
       userId: localStorage.getItem("userId"),
       amount: Number(amount).toFixed(2),
       charges: commissionAmount.toFixed(2),
@@ -539,8 +585,9 @@ export class TradesComponent implements OnInit {
   }
 
   loadPreviousDepositTotals() {
-    this.depositService.getPreviousDeposits().subscribe((data: any) => {
-      this.totalDeposit = Number(data['totalDeposit']).toFixed(2);
+    this.dashboardService.getAccountSummary().subscribe((data: any) => {
+      this.totalDeposit = Number(data['totalInvesment']).toFixed(2);
+      this.totalDepositWords = data['totalInvesmentInWord']
     })
   }
 
@@ -572,6 +619,9 @@ export class TradesComponent implements OnInit {
 
       console.log('maxQtySales', this.maxQtySales);
       console.log('sellFormNetAmount', this.sellFormNetAmount);
+
+
+
       if (formVal.date == undefined) {
         formVal.date = new Date();
       }

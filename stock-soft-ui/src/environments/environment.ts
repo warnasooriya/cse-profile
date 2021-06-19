@@ -13,5 +13,6 @@ export const environment = {
   //endPointURL:"http://localhost:8081/",
   //imageUrl: 'https://cicra.grp.lk/lms/contentImages/',
   endPointURL: "http://techarticless.com:8080/api/",
-  cseEntPoint: "https://www.cse.lk/api/"
+  cseEntPoint: "https://www.cse.lk/api/",
+  socketUrl: "http://techarticless.com:8080/socket/gs-guide-websocket"
 };

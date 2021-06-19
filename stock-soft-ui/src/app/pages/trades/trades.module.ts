@@ -1,31 +1,33 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NbCardModule, 
-  NbIconModule, 
+import {
+  NbCardModule,
+  NbIconModule,
   NbInputModule,
-   NbTreeGridModule,
-    NbAlertModule, 
-    NbButtonModule, 
-     NbDatepickerModule ,
-     NbRadioModule,
-     NbSelectModule,
-     NbUserModule,
-     NbActionsModule,
-     NbAutocompleteModule,
-     NbTooltipModule,
-     
-    } from '@nebular/theme';
+  NbTreeGridModule,
+  NbAlertModule,
+  NbButtonModule,
+  NbDatepickerModule,
+  NbRadioModule,
+  NbSelectModule,
+  NbUserModule,
+  NbActionsModule,
+  NbAutocompleteModule,
+  NbTooltipModule,
+
+} from '@nebular/theme';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
-import { TradesRoutingModule  } from './trades-routing.module';
+import { TradesRoutingModule } from './trades-routing.module';
 import { TradesComponent } from './trades.component';
 import { ThemeModule } from '../../@theme/theme.module';
 import { FsIconComponent } from './trades.component';
-import { FormsModule, ReactiveFormsModule   } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { Select2Module } from 'ng-select2-component';
 
 @NgModule({
-  declarations: [TradesComponent,FsIconComponent],
+  declarations: [TradesComponent, FsIconComponent],
   imports: [
     CommonModule,
     TradesRoutingModule,
@@ -48,6 +50,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
     NbTooltipModule,
     NgxEchartsModule,
     NgxChartsModule,
+    Select2Module
   ]
 })
 export class TradesModule { }

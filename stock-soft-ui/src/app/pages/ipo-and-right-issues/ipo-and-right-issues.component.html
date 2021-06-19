@@ -8,7 +8,8 @@
                     <div class="form-group">
                         <label for="transType" class="label">Transaction Type</label>
                         <input type="hidden" formControlName="userId">
-                        <nb-select fullWidth id="transType" placeholder="Transaction Type" formControlName="transType">
+                        <nb-select fullWidth id="transType" placeholder="Transaction Type" formControlName="transType"
+                            [ngClass]="{ 'is-invalid': submitted && f.transType.errors }">
                             <nb-option *ngFor="let trans of transactionType" [value]="trans.id">
                                 {{trans.type}}
                             </nb-option>
@@ -18,7 +19,8 @@
                     <div class="form-group">
                         <label for="pcompany" class="label">Company</label>
                         <input type="hidden" formControlName="userId">
-                        <nb-select fullWidth id="pcompany" placeholder="Company" formControlName="company">
+                        <nb-select fullWidth id="pcompany" placeholder="Company" formControlName="company"
+                            [ngClass]="{ 'is-invalid': submitted && f.company.errors }">
                             <nb-option *ngFor="let com of companyData" [value]="com.id">
                                 {{com.code}}
                             </nb-option>
@@ -29,7 +31,7 @@
                     <div class="form-group">
                         <label for="date" class="label">Date</label>
                         <input nbInput fullWidth placeholder="Transaction Date" formControlName="date"
-                            [nbDatepicker]="date">
+                            [nbDatepicker]="date" [ngClass]="{ 'is-invalid': submitted && f.date.errors }">
                         <nb-datepicker #date></nb-datepicker>
                     </div>
 
@@ -41,13 +43,13 @@
                     <div class="form-group">
                         <label for="qty" class="label">Qty</label>
                         <input type="number" nbInput fullWidth placeholder="Qty" (input)="calculateAmount()"
-                            formControlName="qty">
+                            formControlName="qty" [ngClass]="{ 'is-invalid': submitted && f.qty.errors }">
                     </div>
 
                     <div class="form-group">
                         <label for="price" class="label">Price</label>
                         <input type="number" step="any" nbInput fullWidth placeholder="Price" formControlName="price"
-                            (input)="calculateAmount()">
+                            (input)="calculateAmount()" [ngClass]="{ 'is-invalid': submitted && f.price.errors }">
                     </div>
 
                     <div class="form-group">

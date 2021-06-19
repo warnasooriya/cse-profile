@@ -1,3 +1,19 @@
+
+
 .pull-right{
     float: right;
 }
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
+    background-color: red;
+}
+.ng-select .ng-select-container:hover{
+    background-color: yellow;
+}
+.is-invalid{
+    border-color: brown !important;
+    border:1px solid brown;
+  }
+
+
+
+  

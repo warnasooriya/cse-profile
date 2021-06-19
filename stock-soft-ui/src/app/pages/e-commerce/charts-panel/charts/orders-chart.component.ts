@@ -21,7 +21,7 @@ import { LayoutService } from '../../../../@core/utils/layout.service';
 export class OrdersChartComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   @Input()
-  ordersChartData:any;
+  ordersChartData: any;
 
   private alive = true;
 
@@ -35,7 +35,7 @@ export class OrdersChartComponent implements AfterViewInit, OnDestroy, OnChanges
   }
 
   constructor(private theme: NbThemeService,
-              private layoutService: LayoutService) {
+    private layoutService: LayoutService) {
     this.layoutService.onSafeChangeLayoutSize()
       .pipe(
         takeWhile(() => this.alive),
@@ -63,7 +63,7 @@ export class OrdersChartComponent implements AfterViewInit, OnDestroy, OnChanges
         left: 100,
         top: 20,
         right: 0,
-        bottom:60,
+        bottom: 60,
       },
       tooltip: {
         trigger: 'item',
@@ -108,8 +108,8 @@ export class OrdersChartComponent implements AfterViewInit, OnDestroy, OnChanges
             width: '1',
           },
         },
-         
-        
+
+
       },
       yAxis: {
         type: 'value',
@@ -145,7 +145,7 @@ export class OrdersChartComponent implements AfterViewInit, OnDestroy, OnChanges
   }
 
   getFirstLine(eTheme) {
-    return         {
+    return {
       type: 'line',
       smooth: true,
       symbolSize: 20,
@@ -189,7 +189,7 @@ export class OrdersChartComponent implements AfterViewInit, OnDestroy, OnChanges
   }
 
   getSecondLine(eTheme) {
-    return         {
+    return {
       type: 'line',
       smooth: true,
       symbolSize: 20,
@@ -275,10 +275,10 @@ export class OrdersChartComponent implements AfterViewInit, OnDestroy, OnChanges
       data: [],
     };
   }
- 
+
 
   getFourthLine(eTheme) {
-    return         {
+    return {
       type: 'line',
       smooth: true,
       symbolSize: 20,
@@ -321,7 +321,7 @@ export class OrdersChartComponent implements AfterViewInit, OnDestroy, OnChanges
     };
   }
 
-  updateOrdersChartOptions(ordersChartData:any) {
+  updateOrdersChartOptions(ordersChartData: any) {
     const options = this.option;
     const series = this.getNewSeries(options.series, ordersChartData.linesData);
     const xAxis = this.getNewXAxis(options.xAxis, ordersChartData.chartLabel);

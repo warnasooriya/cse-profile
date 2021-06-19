@@ -2,10 +2,7 @@ package com.stock.soft.socksoft.serviceImpl;
 
 import com.stock.soft.socksoft.Dto.*;
 import com.stock.soft.socksoft.dao.StockDao;
-import com.stock.soft.socksoft.model.Deposit;
-import com.stock.soft.socksoft.model.Dividend;
-import com.stock.soft.socksoft.model.IPORI;
-import com.stock.soft.socksoft.model.Split;
+import com.stock.soft.socksoft.model.*;
 import com.stock.soft.socksoft.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -90,5 +87,25 @@ public class StockServiceImpl implements StockService {
     @Override
     public TransactionResponse deleteSplit(String id, String userId) {
         return stockDao.deleteSplit(id,userId);
+    }
+
+    @Override
+    public TransactionResponse saveWidthdrw(Widthdrw widthdrw) {
+        return stockDao.saveWidthdrw(widthdrw);
+    }
+
+    @Override
+    public List<DepositDto> getAllWidthdrwByUser(String userId) {
+        return stockDao.getAllWidthdrwByUser(userId);
+    }
+
+    @Override
+    public TransactionResponse deleteWidthdrw(String id, String userId) {
+        return stockDao.deleteWidthdrw(id,userId);
+    }
+
+    @Override
+    public PreviousWidthdrws getPreviousWidthdrws(String userId) {
+        return stockDao.getPreviousWidthdrws(userId);
     }
 }

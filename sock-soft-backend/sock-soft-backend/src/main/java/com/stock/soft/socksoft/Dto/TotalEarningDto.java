@@ -12,6 +12,15 @@ public class TotalEarningDto {
     private BigDecimal totalEarnings;
     private BigDecimal currentMonthEarnings;
     private BigDecimal todayEarnings;
+    private BigDecimal unrealizeNetWorth;
+
+    public BigDecimal getUnrealizeNetWorth() {
+        return unrealizeNetWorth;
+    }
+
+    public void setUnrealizeNetWorth(BigDecimal unrealizeNetWorth) {
+        this.unrealizeNetWorth = unrealizeNetWorth;
+    }
 
     public String getId() {
         return id;

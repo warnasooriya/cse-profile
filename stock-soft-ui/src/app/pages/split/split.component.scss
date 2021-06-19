@@ -1,1 +1,7 @@
 @import "~@ng-select/ng-select/themes/default.theme.css";
+
+
+.is-invalid{
+    border-color: brown !important;
+    border:1px solid brown;
+  }

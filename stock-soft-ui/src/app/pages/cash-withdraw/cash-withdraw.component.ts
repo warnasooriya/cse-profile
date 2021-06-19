@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, FormBuilder } from '@angular/forms';
+import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NbDateService } from '@nebular/theme';
 import { CompanyService } from 'app/services/company.service';
 import { DepositService } from 'app/services/deposit.service';
@@ -64,27 +64,29 @@ export class CashWithdrawComponent implements OnInit {
   ngOnInit(): void {
     this.widthdrawForm = this.formBuilder.group({
       userId: localStorage.getItem('userId'),
-      date: '',
-      amount: 0
+      date: ['', Validators.required],
+      amount: [0, Validators.min(1)]
     });
     this.loadWidthdrw();
     this.loadPreviousWidthdrws();
   }
-
+  get f() { return this.widthdrawForm.controls; }
   onSubmit() {
     this.submitted = true;
-    this.widthdrawService.saveWidthdrw(this.widthdrawForm.value).subscribe((response: any) => {
-      if (response['status'] == "fail") {
-        Swal.fire('CSE Profile', 'Data Saving Problem', 'error');
-      } else {
+    if (!this.widthdrawForm.invalid) {
+      this.widthdrawService.saveWidthdrw(this.widthdrawForm.value).subscribe((response: any) => {
+        if (response['status'] == "fail") {
+          Swal.fire('CSE Profile', 'Data Saving Problem', 'error');
+        } else {
 
-        Swal.fire('CSE Profile', 'Data Saved Successfully!', 'success');
-        this.loadWidthdrw();
-        this.loadPreviousWidthdrws();
-        this.clearForm();
-        this.submitted = false;
-      }
-    });
+          Swal.fire('CSE Profile', 'Data Saved Successfully!', 'success');
+          this.loadWidthdrw();
+          this.loadPreviousWidthdrws();
+          this.clearForm();
+          this.submitted = false;
+        }
+      });
+    }
   }
   clearForm() {
     this.widthdrawForm = this.formBuilder.group({
@@ -103,8 +105,8 @@ export class CashWithdrawComponent implements OnInit {
 
   loadPreviousWidthdrws() {
     this.widthdrawService.getPreviousWidthdrws().subscribe((data: any) => {
-      this.totalWidthdraw = Number(data['totalDeposit']).toFixed(2);
-      this.currentMonthWidthdraw = Number(data['currentMonthDeposit']).toFixed(2);
+      this.totalWidthdraw = Number(data['totalWidthdrw']).toFixed(2);
+      this.currentMonthWidthdraw = Number(data['currentMonthWidthdrw']).toFixed(2);
     })
   }
 

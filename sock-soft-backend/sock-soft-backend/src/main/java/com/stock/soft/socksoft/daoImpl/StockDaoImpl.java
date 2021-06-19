@@ -226,7 +226,7 @@ public class StockDaoImpl implements StockDao {
                     .setParameter(1,userId)
                     .setParameter(2,id)
                     .executeUpdate();
-            Dividend dividend =em.find(Dividend.class,id);
+            Deposit deposit =em.find(Deposit.class,id);
 
             sql="delete from deposit where user_id=? and  id=? ";
             em.createNativeQuery(sql)
@@ -237,7 +237,7 @@ public class StockDaoImpl implements StockDao {
             em.getTransaction().commit();
             transactionResponse.setMessage("Deposit Deleted Successfully !");
             transactionResponse.setStatus("success");
-            transactionResponse.setResObj(dividend);
+            transactionResponse.setResObj(deposit);
         }catch (Exception ex){
             logger.warning(ex.getMessage());
             System.out.println(ex);
@@ -508,5 +508,93 @@ public class StockDaoImpl implements StockDao {
             transactionResponse.setResObj(ex);
         }
         return transactionResponse;
+    }
+
+    @Override
+    public TransactionResponse saveWidthdrw(Widthdrw widthdrw) {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        em.getTransaction().begin();
+        TransactionResponse transactionResponse = new TransactionResponse();
+
+        try {
+            String transType = "WIDTHDRAW";
+            em.persist(widthdrw);
+            CashBook cashBook = new CashBook();
+            cashBook.setInAmount(new BigDecimal(0));
+            cashBook.setOutAmount(widthdrw.getAmount());
+            cashBook.setUserId(widthdrw.getUserId());
+            cashBook.setTransDate(widthdrw.getDate());
+            cashBook.setTransRefId(widthdrw.getId());
+            cashBook.setTransType(transType);
+            em.persist(cashBook);
+
+            em.getTransaction().commit();
+            transactionResponse.setMessage("Withdraw Successfully !");
+            transactionResponse.setStatus("success");
+            transactionResponse.setResObj(widthdrw);
+
+        }catch (Exception ex){
+            logger.warning(ex.getMessage());
+            System.out.println(ex);
+            em.getTransaction().rollback();
+            transactionResponse.setMessage("Withdrawing Problem !");
+            transactionResponse.setStatus("fail");
+            transactionResponse.setResObj(ex);
+        }
+        return  transactionResponse;
+    }
+
+    @Override
+    public List<DepositDto> getAllWidthdrwByUser(String userId) {
+        String sql="SELECT id,amount,DATE_FORMAT(date,\"%Y-%m-%d\") AS date ,user_id FROM widthdrw where user_id=? order by date desc";
+        List<DepositDto> depositDtoList = entityManager.createNativeQuery(sql,DepositDto.class)
+                .setParameter(1,userId)
+                .getResultList();
+        return depositDtoList;
+    }
+
+    @Override
+    public TransactionResponse deleteWidthdrw(String id, String userId) {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        em.getTransaction().begin();
+        TransactionResponse transactionResponse = new TransactionResponse();
+        try {
+
+            String sql="delete from cash_book where user_id=? and trans_type='WIDTHDRAW' and trans_ref_id=? ";
+            em.createNativeQuery(sql)
+                    .setParameter(1,userId)
+                    .setParameter(2,id)
+                    .executeUpdate();
+            Widthdrw widthdrw =em.find(Widthdrw.class,id);
+
+            sql="delete from widthdrw where user_id=? and  id=? ";
+            em.createNativeQuery(sql)
+                    .setParameter(1,userId)
+                    .setParameter(2,id)
+                    .executeUpdate();
+
+            em.getTransaction().commit();
+            transactionResponse.setMessage("Widthdrw Deleted Successfully !");
+            transactionResponse.setStatus("success");
+            transactionResponse.setResObj(widthdrw);
+        }catch (Exception ex){
+            logger.warning(ex.getMessage());
+            System.out.println(ex);
+            em.getTransaction().rollback();
+            transactionResponse.setMessage("Widthdrw Deleting Problem !");
+            transactionResponse.setStatus("fail");
+            transactionResponse.setResObj(ex);
+        }
+        return transactionResponse;
+    }
+
+    @Override
+    public PreviousWidthdrws getPreviousWidthdrws(String userId) {
+        String sql="SELECT uuid() id, (select ifnull(sum(amount),0)  from widthdrw where user_id=?) as total_widthdrw, ifnull(sum(amount),0) as current_month_widthdrw FROM widthdrw where  DATE_FORMAT(date,\"%Y-%m\")  =  DATE_FORMAT(current_date(),\"%Y-%m\")  and user_id=?";
+        List<PreviousWidthdrws> lst = entityManager.createNativeQuery(sql,PreviousWidthdrws.class)
+                .setParameter(1,userId)
+                .setParameter(2,userId)
+                .getResultList();
+        return  lst.get(0);
     }
 }

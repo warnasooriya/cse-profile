@@ -20,4 +20,8 @@ export class AppComponent implements OnInit {
     this.analytics.trackPageViews();
     this.seoService.trackCanonicalChanges();
   }
+
+  scrollToElement(element): void {
+    element.scrollIntoView({ behavior: "smooth", inline: "nearest" });
+  }
 }

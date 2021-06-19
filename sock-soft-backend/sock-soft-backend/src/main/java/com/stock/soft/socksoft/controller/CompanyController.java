@@ -1,4 +1,5 @@
 package com.stock.soft.socksoft.controller;
+import com.stock.soft.socksoft.Dto.CompanyDto;
 import com.stock.soft.socksoft.model.Commission;
 import com.stock.soft.socksoft.model.Companies;
 import com.stock.soft.socksoft.repository.CommissionRepository;
@@ -7,6 +8,8 @@ import com.stock.soft.socksoft.service.SyncService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -49,6 +52,19 @@ public class CompanyController {
     @RequestMapping(value = "/getAll" ,method = RequestMethod.GET)
     public List<Companies> getAllCompanies(){
         return (List<Companies>) companyRepository.findAll();
+    }
+
+
+    @RequestMapping(value = "/getAllForDropDown" ,method = RequestMethod.GET)
+    public List<CompanyDto> getAllForDropDown(){
+        List<CompanyDto> companyDtoList = new ArrayList<>();
+          companyRepository.findAll().forEach(companies -> {
+            CompanyDto cdata = new CompanyDto();
+            cdata.setLabel(companies.getCode());
+            cdata.setValue(companies.getId());
+              companyDtoList.add(cdata);
+        });
+          return  companyDtoList;
     }
 
     @RequestMapping(value = "/getById/{companyId}" ,method = RequestMethod.GET)

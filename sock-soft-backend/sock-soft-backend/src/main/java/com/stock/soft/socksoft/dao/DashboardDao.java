@@ -8,7 +8,7 @@ import java.util.List;
 public interface DashboardDao {
     InvesmentDatDto getAllDepositAmountByUser(String userId);
 
-    TotalEarningDto getTotalEarnings(String userId);
+    TotalEarningResDto getTotalEarnings(String userId);
 
     MonthlyDBSPChardDto getMonthlyDBSPCharts(String userId, String period);
 

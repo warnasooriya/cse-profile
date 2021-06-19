@@ -5,11 +5,14 @@
   <nb-card-body>
     <div class="form-group row">
 
-      <label for="totalAmount" class="label col-md-2 col-form-label">Total Deposits</label>
+      <label for="totalAmount" class="label col-md-2 col-form-label">Total Investment</label>
       <div class="col-md-2">
-        <input nbInput fullWidth disabled outline="warning" value="{{totalDeposit}}">
+        <input nbInput fullWidth disabled outline="warning" title="{{totalDepositWords}}" value="{{totalDeposit}}">
       </div>
-      <div class="col-md-8">
+      <div class="col-md-6">
+
+      </div>
+      <div class="col-md-2">
         <button type="button" nbButton status="success" style="float: right;"
           (click)="openWindowBuy(contentTemplateBuy)">
           <nb-icon icon="shopping-cart"></nb-icon>
@@ -110,7 +113,8 @@
             <div class="form-group">
               <label for="company" class="label">Company</label>
               <nb-select fullWidth formControlName="company" #companyD
-                (ngModelChange)="loadCompanyStock(companyD.value)" required>
+                (ngModelChange)="loadCompanyStock(companyD.value)"
+                [ngClass]="{ 'is-invalid': submittedSell && s.company.errors }">
                 <nb-option *ngFor="let com of companyData" [value]="com.id">
                   {{com.code}}
                 </nb-option>
@@ -125,7 +129,8 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="salesDate" class="label">Sales Date</label>
-              <input nbInput fullWidth placeholder="Sales Date" formControlName="transDate" [nbDatepicker]="salesDate">
+              <input nbInput fullWidth placeholder="Sales Date" formControlName="transDate" [nbDatepicker]="salesDate"
+                [ngClass]="{ 'is-invalid': submittedSell && s.transDate.errors }">
               <nb-datepicker #salesDate></nb-datepicker>
             </div>
           </div>
@@ -141,14 +146,15 @@
             <div class="form-group">
               <label for="qty" class="label">Sales Qty</label>
               <input type="number" nbInput fullWidth id="qty" formControlName="qty" min="1" max="{{maxQtySales}}"
-                placeholder="Qty" (input)="calculateSellAmount()">
+                placeholder="Qty" (input)="calculateSellAmount()"
+                [ngClass]="{ 'is-invalid': submittedSell && s.qty.errors }">
             </div>
           </div>
           <div class="col-md-5">
             <div class="form-group">
               <br>
               <input type="number" nbInput fullWidth formControlName="price" (input)="calculateSellAmount()"
-                placeholder="Price">
+                placeholder="Price" [ngClass]="{ 'is-invalid': submittedSell && s.price.errors }">
             </div>
           </div>
           <div class="col-md-2">
@@ -228,7 +234,8 @@
         <div class="form-group">
           <label for="pcompany" class="label">Company</label>
 
-          <nb-select fullWidth formControlName="company" id="pcompany">
+          <nb-select fullWidth formControlName="company" id="pcompany"
+            [ngClass]="{ 'is-invalid': submittedBuy && f.company.errors }">
             <nb-option *ngFor="let com of companyData" [value]="com.id">
               {{com.code}}
             </nb-option>
@@ -239,18 +246,20 @@
         </div>
         <div class="form-group">
           <label for="purchaseDate" class="label">Buy Date</label>
-          <input nbInput fullWidth placeholder="Buying Date" formControlName="transDate" [nbDatepicker]="purchaseDate">
+          <input nbInput fullWidth placeholder="Buying Date" formControlName="transDate" [nbDatepicker]="purchaseDate"
+            [ngClass]="{ 'is-invalid': submittedBuy && f.transDate.errors }">
           <nb-datepicker #purchaseDate></nb-datepicker>
         </div>
         <div class="form-group">
           <label for="Pqty" class="label">Buy Qty</label>
-          <input type="number" nbInput fullWidth formControlName="qty" (keyup)="calculateAmount()" placeholder="Qty">
+          <input type="number" nbInput fullWidth formControlName="qty" (keyup)="calculateAmount()" placeholder="Qty"
+            [ngClass]="{ 'is-invalid': submittedBuy && f.qty.errors }">
         </div>
 
         <div class="form-group">
           <label for="Pprice" class="label">Buy Price</label>
           <input type="number" formControlName="price" step="any" nbInput fullWidth (keyup)="calculateAmount()"
-            placeholder="Price">
+            placeholder="Price" [ngClass]="{ 'is-invalid': submittedBuy && f.price.errors }">
         </div>
         <div class="form-group">
           <label for="pAmount" class="label">Amount</label>

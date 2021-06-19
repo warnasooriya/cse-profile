@@ -20,6 +20,7 @@ import {
   NbSidebarModule,
   NbToastrModule,
   NbWindowModule,
+
 } from '@nebular/theme';
 import { LoginComponent } from './login/login.component';
 import { FormsModule as ngFormsModule, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -28,9 +29,13 @@ import { ErrorInterceptor } from './_helper/error.interceptor';
 import { LoginoutComponent } from './loginout/loginout.component';
 import { RegisterComponent } from './register/register.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ContComponent } from './cont/cont.component';
+
+
+
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, LoginoutComponent, RegisterComponent],
+  declarations: [AppComponent, LoginComponent, LoginoutComponent, RegisterComponent, ContComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

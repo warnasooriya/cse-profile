@@ -1,10 +1,7 @@
 package com.stock.soft.socksoft.controller;
 
 import com.stock.soft.socksoft.Dto.*;
-import com.stock.soft.socksoft.model.Deposit;
-import com.stock.soft.socksoft.model.Dividend;
-import com.stock.soft.socksoft.model.IPORI;
-import com.stock.soft.socksoft.model.Split;
+import com.stock.soft.socksoft.model.*;
 import com.stock.soft.socksoft.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -78,6 +75,11 @@ public class StockController {
         return stockService.getPreviousDeposits(userId);
     }
 
+    @RequestMapping(value = "/getPreviousWidthdrws/{userId}" ,method = RequestMethod.GET)
+    public PreviousWidthdrws getPreviousWidthdrws(@PathVariable(value = "userId") String userId ){
+        return stockService.getPreviousWidthdrws(userId);
+    }
+
 
 
     @RequestMapping(value = "/splitStock" ,method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
@@ -123,6 +125,28 @@ public class StockController {
         return stockService.deleteSplit(id,userId);
     }
 
+
+    @RequestMapping(value = "/saveWidthdrw" ,method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
+    public TransactionResponse saveWidthdrw(@RequestBody final Widthdrw widthdrw){
+        int m = Calendar.getInstance().getTime().getMinutes();
+        int h = Calendar.getInstance().getTime().getHours();
+        int s = Calendar.getInstance().getTime().getSeconds();
+        widthdrw.getDate().setHours(h);
+        widthdrw.getDate().setMinutes(m);
+        widthdrw.getDate().setSeconds(s);
+        return stockService.saveWidthdrw(widthdrw);
+    }
+
+    @RequestMapping(value = "/getAllWidthdrwByUser/{userId}" ,method = RequestMethod.GET)
+    public List<DepositDto> getAllWidthdrwByUser(@PathVariable(value = "userId") String userId ){
+        return stockService.getAllWidthdrwByUser(userId);
+    }
+
+
+    @RequestMapping(value = "/deleteWidthdrw/{id}/{userId}" ,method = RequestMethod.DELETE)
+    public TransactionResponse deleteWidthdrw(@PathVariable(value = "id") String id ,@PathVariable(value = "userId") String userId ){
+        return stockService.deleteWidthdrw(id,userId);
+    }
 
 
 }

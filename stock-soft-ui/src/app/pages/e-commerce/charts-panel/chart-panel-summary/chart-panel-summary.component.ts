@@ -5,7 +5,7 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./chart-panel-summary.component.scss'],
   template: `
     <div class="summary-container">
-      <div *ngFor="let item of summary">
+      <div *ngFor="let item of summary" title={{item.subtitle}}>
         <div>{{ item.title }}</div>
         <div class="h6">{{ item.value | number:'2.2'}}</div>
       </div>
@@ -13,6 +13,6 @@ import { Component, Input } from '@angular/core';
   `,
 })
 export class ChartPanelSummaryComponent {
-  @Input() summary: {title: string; value: number}[];
+  @Input() summary: { title: string; value: number }[];
 }
 

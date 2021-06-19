@@ -22,7 +22,7 @@ export class ProfitChartComponent implements AfterViewInit, OnDestroy, OnChanges
   options: any = {};
 
   constructor(private theme: NbThemeService,
-              private layoutService: LayoutService) {
+    private layoutService: LayoutService) {
 
     this.layoutService.onSafeChangeLayoutSize()
       .pipe(
@@ -43,11 +43,11 @@ export class ProfitChartComponent implements AfterViewInit, OnDestroy, OnChanges
       .subscribe(config => {
         const eTheme: any = config.variables.profit;
 
-        this.setOptions(eTheme,this.profitChartData);
+        this.setOptions(eTheme, this.profitChartData);
       });
   }
 
-  setOptions(eTheme,pdata ) {
+  setOptions(eTheme, pdata) {
     this.options = {
       backgroundColor: eTheme.bg,
       tooltip: {
@@ -181,16 +181,16 @@ export class ProfitChartComponent implements AfterViewInit, OnDestroy, OnChanges
       .pipe(takeWhile(() => this.alive))
       .subscribe(config => {
         const eTheme: any = config.variables.profit;
-        this.setOptions(eTheme,this.profitChartData);
+        this.setOptions(eTheme, this.profitChartData);
 
-    const series = this.getNewSeries(this.options.series, profitChartData.data);
-    const xAxis = this.getNewXAxis(this.options.xAxis, profitChartData.chartLabel);
+        const series = this.getNewSeries(this.options.series, profitChartData.data);
+        const xAxis = this.getNewXAxis(this.options.xAxis, profitChartData.chartLabel);
 
-    this.option = {
-      ...this.options,
-      xAxis,
-      series,
-    };
+        this.option = {
+          ...this.options,
+          xAxis,
+          series,
+        };
 
       });
 

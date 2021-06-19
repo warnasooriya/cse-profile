@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 import { LoginComponent } from './login/login.component';
 import { LoginoutComponent } from './loginout/loginout.component';
 import { RegisterComponent } from './register/register.component';
+import { AboutusComponent } from './landing/aboutus/aboutus.component';
 
 export const routes: Routes = [
 
@@ -52,8 +53,6 @@ export const routes: Routes = [
   },
 
 
-
-  { path: '', redirectTo: 'pages', pathMatch: 'full' },
   { path: 'pages/trades', loadChildren: () => import('./pages/trades/trades.module').then(m => m.TradesModule) },
   { path: 'pages/divident', loadChildren: () => import('./pages/divident/divident.module').then(m => m.DividentModule) },
   { path: 'pages/diposit', loadChildren: () => import('./pages/diposit/diposit.module').then(m => m.DipositModule) },
@@ -62,12 +61,16 @@ export const routes: Routes = [
   { path: 'pages/transactions', loadChildren: () => import('./pages/transactions/transactions.module').then(m => m.TransactionsModule) },
   { path: 'pages/profit', loadChildren: () => import('./pages/profit/profit.module').then(m => m.ProfitModule) },
   { path: 'landing', loadChildren: () => import('./landing/landing.module').then(m => m.LandingModule) },
+  //{ path: 'about', loadChildren: () => import('./landing/landing.module').then(m => m.LandingModule) },
   { path: 'pages/profile', loadChildren: () => import('./pages/profile/profile.module').then(m => m.ProfileModule) },
   { path: 'pages/split', loadChildren: () => import('./pages/split/split.module').then(m => m.SplitModule) },
   { path: 'pages/ipoRightIssues', loadChildren: () => import('./pages/ipo-and-right-issues/ipo-and-right-issues.module').then(m => m.IpoAndRightIssuesModule) },
 
   { path: 'pages/cash-withdraw', loadChildren: () => import('./pages/cash-withdraw/cash-withdraw.module').then(m => m.CashWithdrawModule) },
-  { path: '**', redirectTo: 'pages' },
+
+  { path: 'landing/about', component: AboutusComponent },
+  { path: '', redirectTo: 'landing', pathMatch: 'full' },
+  { path: '**', redirectTo: 'landing', pathMatch: 'full' },
 ];
 
 

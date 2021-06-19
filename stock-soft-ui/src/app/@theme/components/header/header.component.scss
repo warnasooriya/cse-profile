@@ -13,6 +13,40 @@
     width: calc(#{nb-theme(sidebar-width)} - #{nb-theme(header-padding)});
   }
 
+  .aspi-up-total-clas{
+    color: rgb(13, 180, 13);
+    padding-left: 10px;
+    padding-right: 10px;
+    font-weight: bold;
+    font-size: 14px;
+  }
+  .aspi-up{
+    color: rgb(13, 180, 13);
+    padding-left: 10px;
+    padding-right: 10px;
+    font-weight: bold;
+    font-size: 14px;
+  }
+  .aspi-down-total-clas{
+    color: rgb(245, 9, 9);
+    padding-left: 5px;
+    padding-right: 10px;
+    font-weight: bold;
+    font-size: 14px;
+  }
+  .aspi-down{
+    color: rgb(245, 9, 9);
+    padding-left: 10px;
+    padding-right: 10px;
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  .separator{
+    padding-right: 20px;
+    padding-left: 10px;
+  }
+
   nb-action {
     height: auto;
     display: flex;

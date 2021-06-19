@@ -4,6 +4,7 @@ package com.stock.soft.socksoft.controller;
 import com.stock.soft.socksoft.Dto.*;
 import com.stock.soft.socksoft.model.Deposit;
 import com.stock.soft.socksoft.service.DashboardService;
+import com.stock.soft.socksoft.util.toWords;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +26,7 @@ public class DashboardController {
     }
 
     @RequestMapping(value = "/getTotalEarnings/{userId}" ,method = RequestMethod.GET)
-    public TotalEarningDto getTotalEarnings(@PathVariable(value = "userId") String userId ){
+    public TotalEarningResDto getTotalEarnings(@PathVariable(value = "userId") String userId ){
         return dashboardService.getTotalEarnings(userId);
     }
 
@@ -46,13 +47,20 @@ public class DashboardController {
         AccountSummaryDto accountSummaryDto = new AccountSummaryDto();
         InvesmentDatDto invesmentDatDto = dashboardService.getTotalInvestmentByUser(userId);
         accountSummaryDto.setTotalInvesment(invesmentDatDto.getTotalInvesment());
-        TotalEarningDto totalEarningDto= dashboardService.getTotalEarnings(userId);
+        accountSummaryDto.setTotalInvesmentInWord(toWords.convert(invesmentDatDto.getTotalInvesment()));
+        TotalEarningResDto totalEarningDto= dashboardService.getTotalEarnings(userId);
         accountSummaryDto.setTotalProfit(totalEarningDto.getTotalEarnings());
+        accountSummaryDto.setTotalProfitInWord(toWords.convert(totalEarningDto.getTotalEarnings()));
         BigDecimal totalEquityHolding = totalEarningDto.getTotalEquityHoldings();
         BigDecimal cashInHand = dashboardService.getCashInHandByUser(userId);
         BigDecimal netWorth = totalEquityHolding.add(cashInHand);
         accountSummaryDto.setCashInHand(cashInHand);
+        accountSummaryDto.setCashInHandInWord(toWords.convert(cashInHand));
         accountSummaryDto.setNetWorth(netWorth);
+        accountSummaryDto.setNetWorthInWord(toWords.convert(netWorth));
+        BigDecimal totURNW = totalEarningDto.getUnrealizeNetWorth().add(cashInHand);
+        accountSummaryDto.setUnrealizeNw(totURNW);
+        accountSummaryDto.setUnrealizeNwInWord(toWords.convert(totURNW));
         return accountSummaryDto;
     }
 

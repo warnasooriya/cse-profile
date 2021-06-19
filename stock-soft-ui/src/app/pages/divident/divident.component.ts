@@ -1,4 +1,4 @@
-import { Component,  ViewChild,OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import Swal from 'sweetalert2'
 import { map, startWith } from 'rxjs/operators';
@@ -15,12 +15,12 @@ import { LocalDataSource } from 'ng2-smart-table';
 })
 export class DividentComponent implements OnInit {
   [x: string]: any;
- 
-  divForm:FormGroup;
+
+  divForm: FormGroup;
   source: LocalDataSource = new LocalDataSource();
-  
+
   settings = {
-    
+
     add: {
       addButtonContent: '<i class="nb-plus"></i>',
       createButtonContent: '<i class="nb-checkmark"></i>',
@@ -37,8 +37,8 @@ export class DividentComponent implements OnInit {
     },
     actions: {
       add: false,
-      edit:false
-      },
+      edit: false
+    },
     columns: {
       company: {
         title: 'Company',
@@ -47,17 +47,17 @@ export class DividentComponent implements OnInit {
       divDate: {
         title: 'Divident Date',
         type: 'string',
-        valuePrepareFunction: function (value) { return   value.split('T')[0]   },
+        valuePrepareFunction: function (value) { return value.split('T')[0] },
       },
       xdate: {
         title: 'X Date',
         type: 'string',
-        valuePrepareFunction: function (value) { return   value.split('T')[0]   },
+        valuePrepareFunction: function (value) { return value.split('T')[0] },
       },
       price: {
         title: 'Current Price',
         type: 'html',
-        filter:false,
+        filter: false,
         valuePrepareFunction: function (value) { return '<div align="right"> ' + Number(value).toFixed(2) + ' </div>' },
       },
       equity: {
@@ -71,32 +71,32 @@ export class DividentComponent implements OnInit {
         valuePrepareFunction: function (value) { return '<div align="right"> ' + Number(value).toFixed(2) + ' </div>' },
         filter: false,
       },
-     
+
     },
   };
 
 
-  constructor(private companyService:CompanyService,  protected dateService: NbDateService<Date>,
-    private formBuilder:FormBuilder,
-    private dividentService : DividentService
-    ) { }
+  constructor(private companyService: CompanyService, protected dateService: NbDateService<Date>,
+    private formBuilder: FormBuilder,
+    private dividentService: DividentService
+  ) { }
 
-  submitted=false;
-  companyData:any;
+  submitted = false;
+  companyData: any;
   filteredControlOptions$: Observable<string[]>;
   filteredNgModelOptions$: Observable<string[]>;
   inputFormControl: FormControl;
   value: string;
-  isDisabledCash=false;
-  isDisabledQty=false;
+  isDisabledCash = false;
+  isDisabledQty = false;
   ngOnInit() {
     this.loadCompanies();
     this.divForm = this.formBuilder.group({
       company: ['', Validators.required],
-      userId:localStorage.getItem('userId'),
+      userId: localStorage.getItem('userId'),
       divxdDate: ['', Validators.required],
       divDate: ['', Validators.required],
-      currentPrice:0,
+      currentPrice: 0,
       equityAvailable: false,
       cashAvailable: false,
       equity: 0,
@@ -104,7 +104,7 @@ export class DividentComponent implements OnInit {
     });
     this.dissableChecker();
     this.loadDividendToTable();
-      
+
   }
 
   private filter(value: string): string[] {
@@ -118,44 +118,48 @@ export class DividentComponent implements OnInit {
   }
 
 
-  loadCompanies(){
-    this.companyService.getCompanies().subscribe((company: any[]) => {
+  loadCompanies() {
+    this.companyService.getCompaniesForDropDown().subscribe((company: any[]) => {
       this.companyData = company;
     });
 
   }
-
-  onSubmit(){
-    this.submitted=true;
-    this.dividentService.saveDivident(this.divForm.value).subscribe((response:any[])=>{
-      if (response['status'] == "fail") {
+  get f() { return this.divForm.controls; }
+  onSubmit() {
+    this.submitted = true;
+    if (!this.divForm.invalid) {
+      this.dividentService.saveDivident(this.divForm.value).subscribe((response: any[]) => {
+        if (response['status'] == "fail") {
           Swal.fire('CSE Profile', 'Data Saving Problem', 'error');
         } else {
           this.loadDividendToTable();
           Swal.fire('CSE Profile', 'Data Saved Successfully!', 'success');
           this.clearForm();
-          this.submitted=false;
+          this.submitted = false;
         }
+      })
+    } else {
+      console.log(this.f);
+    }
 
-    })
   }
 
   clearForm() {
     this.divForm = this.formBuilder.group({
       company: '',
       divxdDate: '',
-      divDate:'',
+      divDate: '',
       equityAvailable: false,
       cashAvailable: false,
-      currentPrice:0,
+      currentPrice: 0,
       equity: 0,
       cashAmount: 0
     });
     this.dissableChecker();
   }
 
-  loadDividendToTable(){
-    this.dividentService.loadDividendToTable(localStorage.getItem("userId")).subscribe((response:any[])=>{
+  loadDividendToTable() {
+    this.dividentService.loadDividendToTable(localStorage.getItem("userId")).subscribe((response: any[]) => {
       this.source = new LocalDataSource(response);
     })
   }
@@ -171,46 +175,46 @@ export class DividentComponent implements OnInit {
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.dividentService.deleteDividend(event.data.id).subscribe((response:any[])=>{
-            if(response["status"]=="success"){
-             
-              Swal.fire(
-                'Deleted!',
-                'Your Record has been deleted.',
-                'success'
-              );
-              this.loadDividendToTable();
-            }else{
-              Swal.fire(
-                'Problem!',
-                'Your Record Deleting Problem',
-                'error'
-              )
-            }
+        this.dividentService.deleteDividend(event.data.id).subscribe((response: any[]) => {
+          if (response["status"] == "success") {
+
+            Swal.fire(
+              'Deleted!',
+              'Your Record has been deleted.',
+              'success'
+            );
+            this.loadDividendToTable();
+          } else {
+            Swal.fire(
+              'Problem!',
+              'Your Record Deleting Problem',
+              'error'
+            )
+          }
         })
-        
+
       }
     })
   }
-  dissableChecker(){
+  dissableChecker() {
 
-    let formdata =this.divForm.value;
-    if(formdata.cashAvailable==true){
-      this.isDisabledCash=false;
-    }else{
-      this.isDisabledCash=true;
+    let formdata = this.divForm.value;
+    if (formdata.cashAvailable == true) {
+      this.isDisabledCash = false;
+    } else {
+      this.isDisabledCash = true;
       this.divForm.patchValue({
         'cashAmount': '0'
-    });
+      });
     }
 
-    if(formdata.equityAvailable==true){
-      this.isDisabledQty=false;
-    }else{
-      this.isDisabledQty=true;
+    if (formdata.equityAvailable == true) {
+      this.isDisabledQty = false;
+    } else {
+      this.isDisabledQty = true;
       this.divForm.patchValue({
         'equity': '0'
-    });
+      });
     }
 
   }

@@ -8,7 +8,7 @@
             <label for="pcompany" class="label">Company</label>
             <input type="hidden" formControlName="userId">
             <nb-select fullWidth id="pcompany" placeholder="Company" formControlName="company"
-              (ngModelChange)="loadCurrentAvailability()">
+              (ngModelChange)="loadCurrentAvailability()" [ngClass]="{ 'is-invalid': submitted && f.company.errors }">
               <nb-option *ngFor="let com of companyData" [value]="com.id">
                 {{com.code}}
               </nb-option>
@@ -23,7 +23,8 @@
 
           <div class="form-group">
             <label for="splitDate" class="label">Split Date</label>
-            <input nbInput fullWidth placeholder="Split Date" formControlName="splitDate" [nbDatepicker]="splitDate">
+            <input nbInput fullWidth placeholder="Split Date" formControlName="splitDate" [nbDatepicker]="splitDate"
+              [ngClass]="{ 'is-invalid': submitted && f.splitDate.errors }">
             <nb-datepicker #splitDate></nb-datepicker>
           </div>
         </div>
@@ -31,22 +32,23 @@
         <div class="col-md-6">
           <div class="form-group">
             <label for="currentQty" class="label">Current Qty</label>
-            <input disabled nbInput fullWidth placeholder="Current Qty" formControlName="currentQty">
+            <input disabled nbInput fullWidth placeholder="Current Qty" formControlName="currentQty"
+              [ngClass]="{ 'is-invalid': submitted && f.currentQty.errors }">
           </div>
           <div class="form-group">
             <label for="futureQty" class="label">Future Qty</label>
             <input type="number" disabled step="any" nbInput fullWidth placeholder="Future Qty"
-              formControlName="futureQty">
+              formControlName="futureQty" [ngClass]="{ 'is-invalid': submitted && f.futureQty.errors }">
           </div>
           <div class="form-group">
             <label for="currentPrice" class="label">Current Price</label>
             <input type="number" disabled step="any" nbInput fullWidth placeholder="Current Price"
-              formControlName="currentPrice">
+              formControlName="currentPrice" [ngClass]="{ 'is-invalid': submitted && f.currentPrice.errors }">
           </div>
           <div class="form-group">
             <label for="newPrice" class="label">Future Price</label>
             <input type="number" disabled step="any" nbInput fullWidth placeholder="Future Price"
-              formControlName="newPrice">
+              formControlName="newPrice" [ngClass]="{ 'is-invalid': submitted && f.newPrice.errors }">
           </div>
         </div>
       </div>

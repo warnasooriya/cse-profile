@@ -8,13 +8,8 @@ import { environment } from 'environments/environment';
 export class WidthdrawService {
   getPreviousWidthdrws() {
     let userId = localStorage.getItem("userId");
-    //let url = environment.endPointURL + "stock/getPreviousWidthdrws/" + userId;
-    let params = new HttpParams()
-      .set('alphabet', 'A');
-    let urlNw = environment.cseEntPoint + "alphabetical";
-    return this.http.post(urlNw, params);
-
-    //return this.http.get(url);
+    let url = environment.endPointURL + "stock/getPreviousWidthdrws/" + userId;
+    return this.http.get(url);
 
   }
   deleteWidthdrw(id: any) {

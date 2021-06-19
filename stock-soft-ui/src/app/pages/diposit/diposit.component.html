@@ -1,79 +1,81 @@
 <nb-card>
-    <nb-card-header>Cash Deposit</nb-card-header>
-    <nb-card-body>
-      <div class="row">
-        <div class="col-md-6">
-          <ng2-smart-table [settings]="settings" [source]="source" (deleteConfirm)="onDeleteConfirm($event)">
-          </ng2-smart-table>
-    </div>
-        <div class="col-md-6">
-          <nb-card>
-            <nb-card-body>
-              <form   [formGroup]="depositForm" (ngSubmit)="onSubmit()">
-  
-                <div class="form-group">
-                  <label for="date" class="label">Date</label>
-                  <input nbInput fullWidth  placeholder="Date"  id="date" formControlName="date" [nbDatepicker]="date">
-                            <nb-datepicker #date></nb-datepicker>
-                </div>
-                <input type="hidden"  formControlName="userId">
-                <div class="form-group">
-                 
-                  <input type="number" fullWidth step="any"  nbInput   id="amount" formControlName="amount" placeholder="Diposited Amount">
-                </div>
-         
-                 
-                <button type="submit" nbButton status="danger">Save</button>
-              </form>
+  <nb-card-header>Cash Deposit</nb-card-header>
+  <nb-card-body>
+    <div class="row">
+      <div class="col-md-6">
+        <ng2-smart-table [settings]="settings" [source]="source" (deleteConfirm)="onDeleteConfirm($event)">
+        </ng2-smart-table>
+      </div>
+      <div class="col-md-6">
+        <nb-card>
+          <nb-card-body>
+            <form [formGroup]="depositForm" (ngSubmit)="onSubmit()">
+
+              <div class="form-group">
+                <label for="date" class="label">Date</label>
+                <input nbInput fullWidth placeholder="Date" id="date" formControlName="date" [nbDatepicker]="date"
+                  [ngClass]="{ 'is-invalid': submitted && f.date.errors }">
+                <nb-datepicker #date></nb-datepicker>
+              </div>
+              <input type="hidden" formControlName="userId">
+              <div class="form-group">
+
+                <input type="number" fullWidth step="any" nbInput id="amount" formControlName="amount"
+                  placeholder="Diposited Amount" [ngClass]="{ 'is-invalid': submitted && amountInValide }">
+              </div>
 
 
-<br>
-<hr>
-              
-<div class="row show-grid">
-  <div class="col-md-6">
-    <nb-card>
-      <nb-card-header>Total Deposit</nb-card-header>
-      <nb-card-body>
-        <nb-alert outline="info">
-          {{totalDeposit | number:'2.2'}}
-        </nb-alert>
-       
-      </nb-card-body>
-    </nb-card>
-  </div>
-  <div class="col-md-6" >
-    <nb-card >
-      <nb-card-header>Current Month Deposit</nb-card-header>
-      <nb-card-body >
-        <nb-alert outline="success" >
-          {{currentMonthDeposit | number:'2.2'}}
-        </nb-alert>
-       
-      </nb-card-body>
-    </nb-card>
-  </div>
-   
-   
-</div>
-
-            </nb-card-body>
+              <button type="submit" nbButton status="danger">Save</button>
+            </form>
 
 
+            <br>
+            <hr>
 
-            
+            <div class="row show-grid">
+              <div class="col-md-6">
+                <nb-card>
+                  <nb-card-header>Total Deposit</nb-card-header>
+                  <nb-card-body>
+                    <nb-alert outline="info">
+                      {{totalDeposit | number:'2.2'}}
+                    </nb-alert>
+
+                  </nb-card-body>
+                </nb-card>
+              </div>
+              <div class="col-md-6">
+                <nb-card>
+                  <nb-card-header>Current Month Deposit</nb-card-header>
+                  <nb-card-body>
+                    <nb-alert outline="success">
+                      {{currentMonthDeposit | number:'2.2'}}
+                    </nb-alert>
+
+                  </nb-card-body>
+                </nb-card>
+              </div>
+
+
+            </div>
+
+          </nb-card-body>
 
 
 
-          </nb-card>
-          
-        </div>
-        
+
+
+
+
+        </nb-card>
 
       </div>
-      
-      
-    
 
-    </nb-card-body>
-  </nb-card>
+
+    </div>
+
+
+
+
+  </nb-card-body>
+</nb-card>

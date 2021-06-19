@@ -2,14 +2,18 @@ package com.stock.soft.socksoft.daoImpl;
 
 import com.stock.soft.socksoft.Dto.*;
 import com.stock.soft.socksoft.dao.DashboardDao;
+import com.stock.soft.socksoft.util.toWords;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import pl.allegro.finance.tradukisto.MoneyConverters;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Transactional
 @Repository
@@ -31,9 +35,31 @@ public class DashboardDaoImpl implements DashboardDao {
     }
 
     @Override
-    public TotalEarningDto getTotalEarnings(String userId) {
+    public TotalEarningResDto getTotalEarnings(String userId) {
+        TotalEarningResDto totalEarningResDto = new TotalEarningResDto();
         String sql="call getTotalEarningsByUser(?)";
-        return (TotalEarningDto) entityManager.createNativeQuery(sql,TotalEarningDto.class).setParameter(1,userId).getSingleResult();
+        TotalEarningDto totalEarningDto= (TotalEarningDto) entityManager.createNativeQuery(sql,TotalEarningDto.class).setParameter(1,userId).getSingleResult();
+
+        List<StockSumDto> stockSumDtoList= entityManager.createNativeQuery("call getStocksAvailableByUser(?)",StockSumDto.class)
+                .setParameter(1,userId).getResultList();
+
+        BigDecimal unrealizeNetWorth = new BigDecimal("0");
+        for(StockSumDto dto  : stockSumDtoList){
+            unrealizeNetWorth = unrealizeNetWorth.add(dto.getQty().multiply(dto.getCurrentPrice()));
+        }
+        totalEarningResDto.setCurrentMonthEarnings(totalEarningDto.getCurrentMonthEarnings());
+        totalEarningResDto.setCurrentMonthEarningsInWord(toWords.convert(totalEarningDto.getCurrentMonthEarnings()));
+        totalEarningResDto.setId(totalEarningDto.getId());
+        totalEarningResDto.setTodayEarnings(totalEarningDto.getTodayEarnings());
+        totalEarningResDto.setTodayEarningsInWord(toWords.convert(totalEarningDto.getTodayEarnings()));
+        totalEarningResDto.setTotalEarnings(totalEarningDto.getTotalEarnings());
+        totalEarningResDto.setTotalEarningsInWord(toWords.convert(totalEarningDto.getTotalEarnings()));
+
+        totalEarningResDto.setTotalEquityHoldings(totalEarningDto.getTotalEquityHoldings());
+        totalEarningResDto.setTotalEquityHoldingsInWord(toWords.convert(totalEarningDto.getTotalEquityHoldings()));
+        totalEarningResDto.setUnrealizeNetWorth(unrealizeNetWorth);
+        totalEarningResDto.setUnrealizeNetWorthInWord(toWords.convert(unrealizeNetWorth));
+        return totalEarningResDto;
     }
 
     @Override

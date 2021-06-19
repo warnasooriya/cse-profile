@@ -26,12 +26,12 @@ export class SplitComponent implements OnInit {
       company: ['', Validators.required],
       userId: localStorage.getItem('userId'),
       splitDate: ['', Validators.required],
-      currentQty: 0,
-      futureQty: 0,
-      outQty: 0,
-      fromQty: 0,
-      currentPrice: 0,
-      newPrice: 0
+      currentQty: [0, Validators.min(1)],
+      futureQty: [0, Validators.min(1)],
+      outQty: [0, Validators.min(1)],
+      fromQty: [0, Validators.min(1)],
+      currentPrice: [0, Validators.min(1)],
+      newPrice: [0, Validators.min(1)]
     });
     this.loadSplitedDataToTable();
   }
@@ -151,20 +151,23 @@ export class SplitComponent implements OnInit {
     });
 
   }
-
+  get f() { return this.splitForm.controls; }
   onSubmit() {
     this.submitted = true;
-    this.splitService.saveSplit(this.splitForm.value).subscribe((response: any[]) => {
-      if (response['status'] == "fail") {
-        Swal.fire('CSE Profile', 'Data Saving Problem', 'error');
-      } else {
-        this.loadSplitedDataToTable();
-        Swal.fire('CSE Profile', 'Data Saved Successfully!', 'success');
-        this.clearForm();
-        this.submitted = false;
-      }
+    if (!this.splitForm.invalid) {
+      this.splitService.saveSplit(this.splitForm.value).subscribe((response: any[]) => {
+        if (response['status'] == "fail") {
+          Swal.fire('CSE Profile', 'Data Saving Problem', 'error');
+        } else {
+          this.loadSplitedDataToTable();
+          Swal.fire('CSE Profile', 'Data Saved Successfully!', 'success');
+          this.clearForm();
+          this.submitted = false;
+        }
 
-    })
+      })
+    }
+
   }
 
   loadCurrentAvailability() {

@@ -14,14 +14,15 @@
                             <div class="form-group">
                                 <label for="date" class="label">Date</label>
                                 <input nbInput fullWidth placeholder="Date" id="date" formControlName="date"
-                                    [nbDatepicker]="date">
+                                    [nbDatepicker]="date" [ngClass]="{ 'is-invalid': submitted && f.date.errors }">
                                 <nb-datepicker #date></nb-datepicker>
                             </div>
                             <input type="hidden" formControlName="userId">
                             <div class="form-group">
 
                                 <input type="number" fullWidth step="any" nbInput id="amount" formControlName="amount"
-                                    placeholder="Diposited Amount">
+                                    placeholder="Diposited Amount"
+                                    [ngClass]="{ 'is-invalid': submitted && f.amount.errors }">
                             </div>
 
 

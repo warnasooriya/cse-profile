@@ -20,6 +20,16 @@ public class StockSumDto {
     private String lotNumbers;
     private BigDecimal currentPrice;
     private BigDecimal unrealizeProfit;
+    private BigDecimal Percentage;
+    private BigDecimal commission;
+
+    public BigDecimal getCommission() {
+        return commission;
+    }
+
+    public void setCommission(BigDecimal commission) {
+        this.commission = commission;
+    }
 
     public String getId() {
         return id;
@@ -115,5 +125,13 @@ public class StockSumDto {
 
     public void setUnrealizeProfit(BigDecimal unrealizeProfit) {
         this.unrealizeProfit = unrealizeProfit;
+    }
+
+    public BigDecimal getPercentage() {
+        return Percentage;
+    }
+
+    public void setPercentage(BigDecimal percentage) {
+        Percentage = percentage;
     }
 }

@@ -98,8 +98,8 @@ export class IpoAndRightIssuesComponent implements OnInit {
       company: ['', Validators.required],
       userId: localStorage.getItem('userId'),
       date: ['', Validators.required],
-      qty: 0,
-      price: 0,
+      qty: [0, Validators.min(1)],
+      price: [0, Validators.required],
       amount: 0
     });
 
@@ -125,20 +125,22 @@ export class IpoAndRightIssuesComponent implements OnInit {
     });
 
   }
-
+  get f() { return this.ipoRIForm.controls; }
   onSubmit() {
     this.submitted = true;
-    this.ipoRIService.saveIpoRI(this.ipoRIForm.value).subscribe((response: any[]) => {
-      if (response['status'] == "fail") {
-        Swal.fire('CSE Profile', 'Data Saving Problem', 'error');
-      } else {
-        this.loadDIOPAndIRToTable();
-        Swal.fire('CSE Profile', 'Data Saved Successfully!', 'success');
-        this.clearForm();
-        this.submitted = false;
-      }
+    if (!this.ipoRIForm.invalid) {
+      this.ipoRIService.saveIpoRI(this.ipoRIForm.value).subscribe((response: any[]) => {
+        if (response['status'] == "fail") {
+          Swal.fire('CSE Profile', 'Data Saving Problem', 'error');
+        } else {
+          this.loadDIOPAndIRToTable();
+          Swal.fire('CSE Profile', 'Data Saved Successfully!', 'success');
+          this.clearForm();
+          this.submitted = false;
+        }
 
-    })
+      })
+    }
   }
 
   calculateAmount() {

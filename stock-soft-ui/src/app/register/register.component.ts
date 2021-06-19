@@ -14,59 +14,59 @@ import { environment } from 'environments/environment';
 })
 export class RegisterComponent implements OnInit {
   submitted = false;
-  await=false;
+  await = false;
   fileData: File = null;
   awaiturl: any = null;
   errorData: String;
   formControlName: any;
   previewUrl: any = null;
-	submitError = false;
-  constructor( private formBuilder:FormBuilder,private aouthService:AuthService, private router: Router) { }
-  errorText="";
-  registerForm:FormGroup;
+  submitError = false;
+  constructor(private formBuilder: FormBuilder, private aouthService: AuthService, private router: Router) { }
+  errorText = "";
+  registerForm: FormGroup;
   ngOnInit(): void {
 
     this.registerForm = this.formBuilder.group({
-      name:['',Validators.required],
-      emailAddress: ['',Validators.required],
-      mobileNo:['',Validators.required],
-      address:['',Validators.required],
-      username:['',Validators.required],
-      password:['',Validators.required],
-      cpass:['',Validators.required],
-      cdsaccount:''
+      name: ['', Validators.required],
+      emailAddress: ['', Validators.required],
+      mobileNo: ['', Validators.required],
+      address: ['', Validators.required],
+      username: ['', Validators.required],
+      password: ['', Validators.required],
+      cpass: ['', Validators.required],
+      cdsaccount: ''
     },
-    {
-      validator: MustMatch('password', 'cpass')
-  }
+      {
+        validator: MustMatch('password', 'cpass')
+      }
     );
 
   }
 
   get f() { return this.registerForm.controls; }
 
-  onSubmit(){
+  onSubmit() {
     console.log('submitting');
     this.submitted = true;
     // stop here if form is invalid
     if (this.registerForm.invalid) {
       console.log(this.f);
       return;
-    }else{
+    } else {
 
       this.aouthService.register(this.registerForm.value).subscribe(
         data => {
           Swal.fire('CSE Profile', 'Successfully Registered ', 'success');
           this.clearForm();
-          this.submitted=false;
+          this.submitted = false;
           this.router.navigate(['/auth']);
         },
         err => {
           Swal.fire('CSE Profile', 'Problem with Registration Please try again later', 'error');
-          
+
         },
         () => {
-            console.log("Complete function triggered.")
+          console.log("Complete function triggered.")
         }
       );
 
@@ -75,18 +75,18 @@ export class RegisterComponent implements OnInit {
     }
 
 
-  } 
-  
+  }
+
   clearForm() {
     this.formBuilder.group({
-      name:'',
-      emailAddress: '' ,
-      mobileNo:'' ,
-      address:'' ,
-      username:'' ,
-      password:'' ,
-      cpass:'',
-      cdsaccount:''
+      name: '',
+      emailAddress: '',
+      mobileNo: '',
+      address: '',
+      username: '',
+      password: '',
+      cpass: '',
+      cdsaccount: ''
     });
   }
 }
