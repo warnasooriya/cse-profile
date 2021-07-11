@@ -8,13 +8,13 @@ import { Router } from '@angular/router';
 })
 export class LoginoutComponent implements OnInit {
 
-  constructor( private router: Router) { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
     localStorage.removeItem('userId');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('access_token');
-    this.router.navigate(['../auth']);
+    this.router.navigate(['../landing']);
   }
 
 }

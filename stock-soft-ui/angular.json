@@ -21,7 +21,7 @@
             "assets": [
               "src/assets",
               "src/favicon.ico",
-              "src/favicon.png",
+              "src/favicon-32x32.png",
               {
                 "glob": "**/*",
                 "input": "node_modules/leaflet/dist/images",

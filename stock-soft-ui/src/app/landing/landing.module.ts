@@ -12,8 +12,9 @@ import { HomeComponent } from './home/home.component';
 import { FooterComponent } from './footer/footer.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-
-
+import { FormsModule as ngFormsModule, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NbActionsModule, NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbIconModule, NbInputModule, NbRadioModule, NbSelectModule } from '@nebular/theme';
 
 
 @NgModule({
@@ -21,7 +22,21 @@ import { RegisterComponent } from './register/register.component';
   imports: [
     CommonModule,
     LandingRoutingModule,
+    ngFormsModule,
+    FormsModule,
+    NgSelectModule,
+    ReactiveFormsModule,
 
+    NbCardModule,
+    NbInputModule,
+    NbButtonModule,
+    NbActionsModule,
+    NbCheckboxModule,
+    NbRadioModule,
+    NbDatepickerModule,
+
+    NbSelectModule,
+    NbIconModule,
   ]
 })
 export class LandingModule { }
