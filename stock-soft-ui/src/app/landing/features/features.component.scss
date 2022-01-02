@@ -6,3 +6,34 @@
 @import "../../../assets/css/magnific-popup.css";
 @import "../../../assets/css/style.css";
 @import "../../../assets/css/responsive.css";
+
+.right-content-area{
+    
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.video-play-btn{
+    background-color: #18ba60;
+    color: #fff;
+    position: absolute;
+    z-index: 1;
+    display: inline-block;
+    width: 70px;
+    height: 70px;
+    line-height: 70px;
+    text-align: center;
+    font-size: 16px;
+    background-color: #fff;
+    border-radius: 50%;
+    color: #313131;
+    top: 40%;
+    left: 45%;
+}

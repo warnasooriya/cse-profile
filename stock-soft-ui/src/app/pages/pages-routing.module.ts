@@ -70,9 +70,9 @@ const routes: Routes = [{
         .then(m => m.CashWithdrawModule),
     },
     {
-      path: 'miscellaneous',
-      loadChildren: () => import('./miscellaneous/miscellaneous.module')
-        .then(m => m.MiscellaneousModule),
+      path: 'calculator',
+      loadChildren: () => import('./calculator/calculator.module')
+        .then(m => m.CalculatorModule),
     },
     {
       path: '',

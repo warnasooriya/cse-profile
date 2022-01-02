@@ -36,6 +36,10 @@ export class ECommerceChartsPanelComponent implements OnDestroy {
           title: 'Total Profit',
           value: Number(sumData['totalProfit']),
           subtitle: sumData['totalProfitInWord']
+        }, {
+          title: 'ROI %',
+          value: Number(sumData['totalProfit']) / Number(sumData['totalInvesment']) * 100,
+          subtitle: 'Return on Investment'
         },
         {
           title: 'Cash In Hand',

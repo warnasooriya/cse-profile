@@ -249,6 +249,15 @@ export class TradesComponent implements OnInit {
         if (message.body) {
           let newDataSet = [];
           let tradeObj = JSON.parse(message.body);
+
+          let totalProfitLoss = 0.00;
+          let totalQty = 0.00;
+          let avgPrecentage = 0.00;
+          let totalCharges = 0.00;
+          let totalAmounts = 0.0;
+
+          let length = this.availableStock.length;
+
           this.availableStock.forEach(function (com, inx) {
             let comCode = com.code;
             let foundCom = tradeObj.find(element => element.code == comCode);
@@ -271,10 +280,25 @@ export class TradesComponent implements OnInit {
               let presentage = Number(profit) / (Number(costAmount) / 100);
               com.percentage = presentage;
               com.unrealizeProfit = profit;
+              totalProfitLoss = totalProfitLoss + profit;
+              avgPrecentage = avgPrecentage + presentage;
+              totalQty = totalQty + qty;
+              totalCharges = totalCharges + commAmount;
+              totalAmounts = totalAmounts + costAmount;
+
+
+            }
+
+            if (comCode == ' ### TOTAL ### ') {
+
+              com.chargers = totalCharges;
+              com.amount = totalAmounts;
+              com.unrealizeProfit = totalProfitLoss;
+              com.percentage = (avgPrecentage / length);
+
             }
             newDataSet.push(com);
           });
-
           this.availableStock = newDataSet;
           //console.table(this.availableStock);
         }
@@ -363,13 +387,55 @@ export class TradesComponent implements OnInit {
   loadDataTable() {
     var availableStockList = [];
     this.buyService.getAvailableStock().subscribe((asl: any[]) => {
-      this.availableStock = asl;
+      asl.sort((a, b) => (a.percentage * -1) - (b.percentage * -1));
 
+      this.availableStock = asl;
       asl.forEach(function (company) {
         var amount = company['amount'];
         var availableStockObj = { "name": company['code'], "value": amount };
         availableStockList.push(availableStockObj);
+
+
       });
+
+
+
+      let totalProfitLoss = 0.00;
+      let totalQty = 0.00;
+      let avgPrecentage = 0.00;
+      let totalCharges = 0.00;
+      let totalAmounts = 0.0;
+
+      this.availableStock.forEach(function (com) {
+        let qty = Number(com.qty);
+        let pdate = com.date;
+        let commission = Number(com.chargers);
+        let commAmount = 0;
+        let costAmount = com.amount;
+        totalProfitLoss = totalProfitLoss + com.unrealizeProfit;
+        avgPrecentage = avgPrecentage + com.percentage;
+        totalQty = totalQty + qty;
+        totalCharges = totalCharges + commission;
+        totalAmounts = totalAmounts + costAmount;
+      });
+
+
+      this.availableStock.push(
+        {
+          code: ' ### TOTAL ### ',
+          date: '',
+          qty: '',
+          price: '',
+          chargers: totalCharges,
+          avgPrice: '',
+          currentPrice: '',
+          amount: totalAmounts,
+          unrealizeProfit: totalProfitLoss,
+          percentage: (avgPrecentage / this.availableStock.length)
+        })
+
+
+
 
       this.options = {
         tooltip: {

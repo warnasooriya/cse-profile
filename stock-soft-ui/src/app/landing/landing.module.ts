@@ -26,7 +26,6 @@ import { NbActionsModule, NbButtonModule, NbCardModule, NbCheckboxModule, NbDate
     FormsModule,
     NgSelectModule,
     ReactiveFormsModule,
-
     NbCardModule,
     NbInputModule,
     NbButtonModule,
@@ -34,9 +33,9 @@ import { NbActionsModule, NbButtonModule, NbCardModule, NbCheckboxModule, NbDate
     NbCheckboxModule,
     NbRadioModule,
     NbDatepickerModule,
-
     NbSelectModule,
     NbIconModule,
+
   ]
 })
 export class LandingModule { }

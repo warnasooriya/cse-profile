@@ -13,7 +13,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/pages/trade',
     home: true,
   },
-
+  {
+    title: 'Profit Calculator',
+    icon: 'tv-outline',
+    link: '/pages/calculator',
+    home: true,
+  },
   {
     title: 'Buy Details',
     icon: 'shopping-cart',

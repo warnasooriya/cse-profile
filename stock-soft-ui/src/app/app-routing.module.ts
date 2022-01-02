@@ -70,6 +70,8 @@ export const routes: Routes = [
 
   { path: 'landing/about', component: AboutusComponent },
   { path: '', redirectTo: 'landing', pathMatch: 'full' },
+
+  { path: 'pages/calculator', loadChildren: () => import('./pages/calculator/calculator.module').then(m => m.CalculatorModule) },
   { path: '**', redirectTo: 'landing', pathMatch: 'full' },
 ];
 

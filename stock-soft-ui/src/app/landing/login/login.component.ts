@@ -10,11 +10,14 @@ import { AuthService } from 'app/services/auth.service';
 })
 export class LoginComponent implements OnInit {
 
-
+  errorMessage = "";
   loginForm: FormGroup;
   constructor(private formBuilder: FormBuilder, private aouthService: AuthService, private router: Router) { }
   errorText = "";
+  loading: boolean;
+
   ngOnInit(): void {
+    this.loading = false;
     var un = localStorage.getItem('remember_username');
     var pw = localStorage.getItem('remember_pw');
 
@@ -39,6 +42,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
+    this.loading = true;
     this.errorText = "";
     if (this.loginForm.value.username == "") {
       this.errorText = "Username Required";
@@ -64,15 +68,17 @@ export class LoginComponent implements OnInit {
         console.log('success')
         localStorage.setItem("access_token", data['access_token']);
         localStorage.setItem("refresh_token", data['refresh_token']);
-
+        this.loading = false;
         this.redirectDashboard();
       },
       err => {
+        this.loading = false;
         console.log('error');
         this.errorText = "Invalied Credencial";
         console.log(err)
       },
       () => {
+        this.loading = false;
         console.log("Complete function triggered.")
       }
     );

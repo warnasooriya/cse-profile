@@ -5,5 +5,7 @@
  */
 export const environment = {
   production: true,
-  endPointURL:"http://techarticless.com/api/"
+  endPointURL: "https://cseprofile.com/api/",
+  cseEntPoint: "https://www.cse.lk/api/",
+  socketUrl: "https://cseprofile.com/socket/gs-guide-websocket"
 };

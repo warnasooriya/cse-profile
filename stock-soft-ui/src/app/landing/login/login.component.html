@@ -5,13 +5,16 @@
             <div class="right-content-area">
                 <!-- right content area -->
                 <div class="contac-form-wrapper">
-                    <h4 class="title">
-                        <div class="icon">
-                            <i class="icofont-ui-unlock"> Login </i>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <img src="https://img.icons8.com/nolan/96/lock.png" width="90px" />
                         </div>
-                    </h4>
-                    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="get-touch-form"
-                        id="contact_form_submit">
+                        <div class="col-md-5" style="position: absolute;margin-top: 40px; margin-left: 110px;">
+                            <label style="font-weight: bold;font-size: 18px;">Application Login</label>
+                        </div>
+                    </div>
+                    <p></p>
+                    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="get-touch-form">
                         <div class="form-element margin-bottom-20">
                             <input type="text" id="name" class="input-field" placeholder="Username"
                                 formControlName="username">
@@ -23,14 +26,21 @@
 
                         <div class="form-element margin-bottom-20">
                             <input type="checkbox" name="rememberme" id="remember" value="1" formControlName="remember">
-                            <label for="remember"> Remember me</label>
+                            <label style="margin-left: 10px;" for="remember"> Remember me</label>
+                            <label style="float: right;color: red;">{{errorText}}</label>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <input type="submit" class="submit-btn" value="Login">
+
+                                <input *ngIf="loading; else elseBlock" type="submit" class="submit-btn default"
+                                    value="Login">
+                                <ng-template #elseBlock>
+                                    <input type="submit" class="submit-btn " value="Login">
+                                </ng-template>
+
                             </div>
                             <div class="col-md-6">
-                                <a class="cls-register" routerLink="../start-now">Register Now</a>
+                                <a class="cls-register" routerLink="../start-now"> <strong>Register Now</strong> </a>
                             </div>
                         </div>
 

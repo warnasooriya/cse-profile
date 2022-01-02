@@ -26,10 +26,12 @@
 
 
 
+    <div class="table-responsive">
+      <ng2-smart-table [settings]="settings" [source]="availableStock"
+        (deleteConfirm)="openWindow(contentTemplate,$event)">
+      </ng2-smart-table>
+    </div>
 
-    <ng2-smart-table [settings]="settings" [source]="availableStock"
-      (deleteConfirm)="openWindow(contentTemplate,$event)">
-    </ng2-smart-table>
   </nb-card-body>
 
 </nb-card>

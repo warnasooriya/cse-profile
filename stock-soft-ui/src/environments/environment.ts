@@ -10,10 +10,10 @@
 
 export const environment = {
   production: false,
-  //endPointURL:"http://localhost:8081/",
-  //imageUrl: 'https://cicra.grp.lk/lms/contentImages/',
-  //endPointURL: "http://techarticless.com:8081/",
-  endPointURL: "http://techarticless.com:8080/api/",
+  // endPointURL: "https://cseprofile.com/api/",
+  // cseEntPoint: "https://www.cse.lk/api/",
+  // socketUrl: "https://cseprofile.com/socket/gs-guide-websocket"
+  endPointURL: "http://localhost:8080/api/",
   cseEntPoint: "https://www.cse.lk/api/",
-  socketUrl: "http://techarticless.com:8080/socket/gs-guide-websocket"
+  socketUrl: "http://localhost:8080/socket/gs-guide-websocket"
 };

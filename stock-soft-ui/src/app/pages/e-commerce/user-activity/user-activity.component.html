@@ -28,7 +28,7 @@
         <div class="caption">Profitability</div>
         <div class="delta value" [class.up]="item.deltaUp" [class.down]="!item.deltaUp">
           <nb-icon [icon]="item.deltaUp ? 'arrow-up' : 'arrow-down'" pack="eva"></nb-icon>
-          {{ item.gainPresentage }}%
+          {{ item.gain/item.investment * 100 | number :'2.'}}%
         </div>
       </div>
 

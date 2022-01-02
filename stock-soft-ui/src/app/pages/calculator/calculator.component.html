@@ -1,0 +1,226 @@
+<nb-card>
+    <nb-card-header>Profit Calculator</nb-card-header>
+    <nb-card-body>
+        <div class="row">
+
+            <div class="col-md-12">
+
+                <!-- <nb-tabset fullWidth>
+                    <nb-tab tabTitle="Qty Base Calculation"> -->
+                <nb-card>
+                    <nb-card-body>
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="label">Company</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <select2 [data]="companyData" [(ngModel)]="company"
+                                            (update)="loadCompanyStock()" placeholder="Company">
+                                        </select2>
+                                    </div>
+                                </div>
+                                <p></p>
+
+                                <div class="row" *ngIf="availablePreviousStock">
+
+                                    <div class="col-md-2">
+                                        <label class="label">Pre Qty</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="number" [(ngModel)]="preQty" nbInput placeholder="Pre Qty">
+                                    </div>
+                                    <div class="col-md-2" style="margin-left: 20px;">
+                                        <label class="label">Pre Avg</label>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <nb-badge style="font-size: medium;" text="{{preAvg}}" status="danger"
+                                            position="top right">
+                                        </nb-badge>
+
+                                    </div>
+
+                                </div>
+                                <p></p>
+
+                                <div class="row">
+
+                                    <div class="col-md-2">
+                                        <label class="label">Buying Price</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="number" [(ngModel)]="buyPrice" (input)="calculate()" nbInput
+                                            placeholder="Buying Price">
+                                    </div>
+                                    <div class="col-md-2" style="margin-left: 20px;">
+                                        <label class="label">Avarage Price</label>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <nb-badge style="font-size: medium;" text="{{avgPrice}}" status="info"
+                                            position="top right">
+                                        </nb-badge>
+                                    </div>
+                                </div>
+                                <p></p>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="label">Buying Qty</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="number" [(ngModel)]="buyQty" (input)="calculate()" nbInput
+                                            placeholder="Equity Qty">
+                                    </div>
+                                    <div class="col-md-2" style="margin-left: 20px;">
+                                        <label class="label">New Investment Amount </label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="number" [(ngModel)]="totPrice" (input)="qtyCalculation()" nbInput
+                                            placeholder="New Investment">
+                                    </div>
+
+                                </div>
+                                <p></p>
+
+
+                            </div>
+                            <div class="col-md-5">
+                                <nb-alert outline="{{profitStarts}}">
+                                    <nb-card>
+                                        <nb-card-body>
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <label class="label">Profit</label>
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <input type="number" [(ngModel)]="profitAmount" nbInput
+                                                        placeholder="Profit Amount" [readonly]="true">
+                                                    <nb-badge style="font-size: medium;" text="{{profitPrecentage}}  %"
+                                                        status="{{profitStarts}}" position="top right">
+                                                    </nb-badge>
+                                                </div>
+
+                                            </div>
+                                            <p></p>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label class="label "> Commission Rate </label>
+                                                    <nb-badge text="{{comRate}} % " status="warning"
+                                                        style="font-size: medium;" position="top right">
+                                                    </nb-badge>
+                                                </div>
+                                            </div>
+                                        </nb-card-body>
+                                    </nb-card>
+                                </nb-alert>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-1">
+                                <label class="label">Selling Price</label>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="number" (input)="calculate()" nbInput [(ngModel)]="sellPrice"
+                                    placeholder="Selling Price">
+                            </div>
+                            <div class="col-md-3">
+                                <nb-checkbox (change)="calculate()" [(ngModel)]="sameDaySale"> Same Day
+                                    Selling
+                                </nb-checkbox>
+                            </div>
+                            <div class="col-md-2" *ngIf="availablePreviousStock">
+                                <label class="label">Net Cost For This Purchase</label>
+                            </div>
+                            <div class="col-md-3" *ngIf="availablePreviousStock">
+                                <input type="number" nbInput disabled [(ngModel)]="thisPurchaseAmount"
+                                    placeholder="Net Cost For This Purchase">
+                            </div>
+
+
+                        </div>
+
+
+                        <p></p>
+                        <nb-alert outline="info">
+
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <label class="label">Cost Amount</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" [(ngModel)]="costAmount" [readonly]="true" nbInput
+                                        placeholder="Cost Amount">
+                                </div>
+
+                                <div class="col-md-1">
+                                    <label class="label">Commission</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" [(ngModel)]="buyCommission" [readonly]="true" nbInput
+                                        placeholder="Commission">
+                                </div>
+
+                                <div class="col-md-1">
+                                    <label class="label">Net Amount</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" [(ngModel)]="buyNetAmount" [readonly]="true" nbInput
+                                        placeholder="Net Amount">
+                                </div>
+
+                            </div>
+                        </nb-alert>
+                        <p></p>
+                        <nb-alert outline="danger">
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <label class="label">Sales Amount</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" [(ngModel)]="sellAmount" [readonly]="true" nbInput
+                                        placeholder="Sales Amount">
+                                </div>
+                                <div class="col-md-1">
+                                    <label class="label">Commission</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" [(ngModel)]="sellCommission" [readonly]="true" nbInput
+                                        placeholder="Commission">
+                                </div>
+                                <div class="col-md-1">
+                                    <label class="label">Net Amount</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" [(ngModel)]="netSellingAmount" [readonly]="true" nbInput
+                                        placeholder="Net Amount">
+                                </div>
+
+
+                            </div>
+                        </nb-alert>
+                        <div class="row">
+
+
+
+                        </div>
+                    </nb-card-body>
+                </nb-card>
+                <!-- </nb-tab>
+                    <nb-tab tabTitle="Amount Base Calculation">
+
+                    </nb-tab>
+                </nb-tabset> -->
+
+
+
+
+                <div class="col-md-2">
+
+                </div>
+
+            </div>
+        </div>
+    </nb-card-body>
+</nb-card>
