@@ -72,7 +72,7 @@ public class SalesDaoImpl implements SalesDao {
                 // get purchase Id
                 String purchaseId =null;
                 try {
-                    String sql="select trans_id from stock_ledger where lot_number=? and trans_type= IN('BUY','DIVIDEND','IPO','RI','SPLIT-IN')";
+                    String sql="select trans_id from stock_ledger where lot_number=? and trans_type IN('BUY','DIVIDEND','IPO','RI','SPLIT-IN')";
                     purchaseId = entityManager.createNativeQuery(sql).setParameter(1,lotNumber).getSingleResult().toString();
                 }catch (Exception e){
 //                    String sql="select trans_id from stock_ledger where lot_number=? and trans_type='DIVIDEND'";

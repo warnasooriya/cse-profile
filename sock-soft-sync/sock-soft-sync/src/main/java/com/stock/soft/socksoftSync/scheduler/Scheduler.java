@@ -13,7 +13,7 @@ public class Scheduler {
    private SyncService syncService;
 
    // every 2 second update prices
-    @Scheduled(fixedRateString = "1000", initialDelayString = "0")
+    @Scheduled(fixedRateString = "10000", initialDelayString = "0")
     public void companyDataSync() {
         syncService.companyDataSync();
     }
@@ -24,7 +24,7 @@ public class Scheduler {
         syncService.companyDataSyncAuto();
     }
 
-    @Scheduled(fixedRateString = "1000", initialDelayString = "0")
+    @Scheduled(fixedRateString = "10000", initialDelayString = "0")
     public void schedulingTask() {
         syncService.sendMessages();
     }

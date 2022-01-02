@@ -55,7 +55,10 @@ public class DashboardController {
         BigDecimal cashInHand = dashboardService.getCashInHandByUser(userId);
         BigDecimal netWorth = totalEquityHolding.add(cashInHand);
         accountSummaryDto.setCashInHand(cashInHand);
-        accountSummaryDto.setCashInHandInWord(toWords.convert(cashInHand));
+        if(cashInHand.compareTo(new BigDecimal("0")) > 0){
+            accountSummaryDto.setCashInHandInWord(toWords.convert(cashInHand));
+        }
+
         accountSummaryDto.setNetWorth(netWorth);
         accountSummaryDto.setNetWorthInWord(toWords.convert(netWorth));
         BigDecimal totURNW = totalEarningDto.getUnrealizeNetWorth().add(cashInHand);

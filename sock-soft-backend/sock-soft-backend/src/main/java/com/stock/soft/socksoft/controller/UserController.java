@@ -5,8 +5,10 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.google.common.net.HttpHeaders;
 import com.stock.soft.socksoft.Dto.DownloadFileDto;
 import com.stock.soft.socksoft.model.Companies;
+import com.stock.soft.socksoft.model.UserMessage;
 import com.stock.soft.socksoft.model.Users;
 import com.stock.soft.socksoft.repository.CompanyRepository;
+import com.stock.soft.socksoft.repository.MessagesRepository;
 import com.stock.soft.socksoft.repository.UsersRepository;
 import com.stock.soft.socksoft.service.S3Services;
 import com.stock.soft.socksoft.service.UserService;
@@ -48,6 +50,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private MessagesRepository messagesRepository;
+
     @RequestMapping(value = "/create" ,method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
     public Users createUser(@RequestBody final  Users users){
        // users.setPassword(bCryptPasswordEncoder.encode(users.getPassword()));
@@ -65,6 +70,14 @@ public class UserController {
         users.setCreatedAt(new Date());
         return usersRepository.save(users);
     }
+
+    @RequestMapping(value = "/message" ,method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
+    public UserMessage message(@RequestBody final UserMessage message){
+        message.setMessageDate(new Date());
+        messagesRepository.save(message);
+        return message;
+    }
+
 
     @RequestMapping(value = "/login" ,method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
     public Users userLogin(@FormParam("username") String username , @FormParam("password") String password){
